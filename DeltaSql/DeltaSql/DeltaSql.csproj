@@ -1,0 +1,76 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>disable</Nullable>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>Images\Icon\DeltaSql.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="References\**" />
+    <EmbeddedResource Remove="References\**" />
+    <None Remove="References\**" />
+    <Page Remove="References\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Images\Icon\DeltaSql-128x128.png" />
+    <None Remove="Images\Icon\DeltaSql-64x64.png" />
+    <None Remove="Images\Icon\DeltaSql.ico" />
+    <None Remove="Images\Icon\DeltaSql.png" />
+    <None Remove="Images\Icon\Icon.psd" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Remove="Translations\Translations.en-US.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
+    <PackageReference Include="WPF.InternalDialogs" Version="1.0.2" />
+    <PackageReference Include="WPF.Translations" Version="1.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="SimpleLogger">
+      <HintPath>..\References\SimpleLogger\SimpleLogger.dll</HintPath>
+    </Reference>
+    <Reference Include="SNORM">
+      <HintPath>..\References\SNORM\SNORM.dll</HintPath>
+    </Reference>
+    <Reference Include="WPF.CustomControls">
+      <HintPath>..\References\WPF.CustomControls\WPF.CustomControls.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\Icon\DeltaSql-128x128.png" />
+    <Resource Include="Images\Icon\DeltaSql-64x64.png" />
+    <Resource Include="Images\Icon\DeltaSql.ico" />
+    <Resource Include="Images\Icon\DeltaSql.png" />
+    <Resource Include="Translations\Translations.en-US.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Theming\Light\" />
+    <Folder Include="Theming\Dark\" />
+  </ItemGroup>
+
+</Project>
