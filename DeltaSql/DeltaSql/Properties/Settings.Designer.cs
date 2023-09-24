@@ -49,10 +49,10 @@ namespace DeltaSql.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("DarkHighlight")]
-        public string Theme {
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int Theme {
             get {
-                return ((string)(this["Theme"]));
+                return ((int)(this["Theme"]));
             }
             set {
                 this["Theme"] = value;

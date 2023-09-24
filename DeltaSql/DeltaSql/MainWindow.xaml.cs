@@ -6,6 +6,8 @@ namespace DeltaSql
     {
         public MainWindow()
         {
+            ServiceLocator.Instance.MainWindowViewModel.Dispatcher = Dispatcher;
+
             DataContext = ServiceLocator.Instance.MainWindowViewModel;
 
             InitializeComponent();
