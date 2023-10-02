@@ -1,0 +1,51 @@
+﻿<!-- 
+    Light
+-->
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:options="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
+                    mc:Ignorable="options">
+    <Color x:Key="DeltaSql.Foreground.Color">#FF000000</Color>
+    <Color x:Key="DeltaSql.Foreground.Disabled.Color">#FF7D7D7D</Color>
+    <Color x:Key="DeltaSql.Foreground.Error.Color">#FFFF0000</Color>
+    <Color x:Key="DeltaSql.Border.Color">#FF000000</Color>
+    <Color x:Key="DeltaSql.Grid.Color">#FFFFFFFF</Color>
+    <Color x:Key="DeltaSql.InternalDialog.Color">#FF2F2F2F</Color>
+    <Color x:Key="DeltaSql.InternalDialog.Title.Color">#FF101010</Color>
+    <Color x:Key="DeltaSql.InternalDialog.ButtonArea.Color">#FF2F2F2F</Color>
+    <Color x:Key="DeltaSql.MessageBox.Color">#FFDDDDDD</Color>
+    <Color x:Key="DeltaSql.MessageBox.Foreground.Color">#FF000000</Color>
+    <Color x:Key="DeltaSql.MessageBox.Title.Color">#FFBBBBBB</Color>
+    <Color x:Key="DeltaSql.MessageBox.ButtonArea.Color">#FFBBBBBB</Color>
+    <Color x:Key="DeltaSql.ProgressBox.Background.Color">#FFDDDDDD</Color>
+    <Color x:Key="DeltaSql.ProgressBox.Foreground.Color">#FF000000</Color>
+    <Color x:Key="DeltaSql.ProgressBox.Title.Background.Color">#FFBBBBBB</Color>
+
+    <SolidColorBrush x:Key="DeltaSql.Foreground" Color="{DynamicResource DeltaSql.Foreground.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="DeltaSql.Foreground.Disabled" Color="{DynamicResource DeltaSql.Foreground.Disabled.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="DeltaSql.Foreground.Error" Color="{DynamicResource DeltaSql.Foreground.Error.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="DeltaSql.Border" Color="{DynamicResource DeltaSql.Border.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="DeltaSql.Grid" Color="{DynamicResource DeltaSql.Grid.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="DeltaSql.InternalDialog" Color="{DynamicResource DeltaSql.InternalDialog.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="DeltaSql.InternalDialog.Title" Color="{DynamicResource DeltaSql.InternalDialog.Title.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="DeltaSql.InternalDialog.ButtonArea" Color="{DynamicResource DeltaSql.InternalDialog.ButtonArea.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="DeltaSql.MessageBox" Color="{DynamicResource DeltaSql.MessageBox.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="DeltaSql.MessageBox.Foreground" Color="{DynamicResource DeltaSql.MessageBox.Foreground.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="DeltaSql.MessageBox.Title" Color="{DynamicResource DeltaSql.MessageBox.Title.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="DeltaSql.MessageBox.ButtonArea" Color="{DynamicResource DeltaSql.MessageBox.ButtonArea.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="DeltaSql.ProgressBox.Background" Color="{DynamicResource DeltaSql.ProgressBox.Background.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="DeltaSql.ProgressBox.Foreground" Color="{DynamicResource DeltaSql.ProgressBox.Foreground.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="DeltaSql.ProgressBox.Title.Background" Color="{DynamicResource DeltaSql.ProgressBox.Title.Background.Color}" options:Freeze="True"/>
+
+    <Style x:Key="GridStyle" TargetType="Grid">
+        <Setter Property="Background" Value="{DynamicResource DeltaSql.Grid}" />
+    </Style>
+    <Style x:Key="TextBlockForegroundStyle" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource DeltaSql.Foreground}" />
+    </Style>
+    <Style x:Key="BorderStyle" TargetType="Border">
+        <Setter Property="BorderBrush" Value="{DynamicResource DeltaSql.Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+</ResourceDictionary>

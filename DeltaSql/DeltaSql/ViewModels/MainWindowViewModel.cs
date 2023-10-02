@@ -1,5 +1,4 @@
-﻿using DeltaSql.Theming;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Threading;
 using WPF.InternalDialogs;
@@ -11,7 +10,6 @@ namespace DeltaSql.ViewModels
     {
         #region Fields
 
-        private Theme theme;
         private Translation translations;
         private string version;
 
@@ -25,16 +23,6 @@ namespace DeltaSql.ViewModels
 
         public ProgressViewModel ProgressViewModel { get; set; }
 
-        public Theme Theme 
-        { 
-            get => theme; 
-            set
-            {
-                theme = value;
-                OnPropertyChanged();
-            }
-        }
-
         public dynamic Translations 
         { 
             get => translations; 
@@ -42,6 +30,7 @@ namespace DeltaSql.ViewModels
             {
                 translations = value;
                 OnPropertyChanged();
+                
             }
         }
 

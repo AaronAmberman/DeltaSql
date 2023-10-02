@@ -5,12 +5,68 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DeltaSql"
         xmlns:viewModels="clr-namespace:DeltaSql.ViewModels"
+        xmlns:internalDialogs="clr-namespace:WPF.InternalDialogs;assembly=WPF.InternalDialogs"
         mc:Ignorable="d"
-        d:DataContext="{d:DesignInstance {x:Type viewModels:MainWindowViewModel}}"
         Title="{Binding Translations.MainWindowTitle, FallbackValue=Delta SQL}" 
         Height="768" Width="1024" WindowStartupLocation="CenterScreen"
-        Icon="pack://application:,,,/Images/Icon/DeltaSql.ico">
-    <Grid Style="{StaticResource GridStyle}">
-
+        Icon="pack://application:,,,/Images/Icon/DeltaSql.ico"
+        d:DataContext="{d:DesignInstance {x:Type viewModels:MainWindowViewModel}}">
+    <Grid x:Name="mainGrid" Style="{StaticResource GridStyle}">
+        <Button Content="Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5" Click="Button_Click" />
+        <ComboBox x:Name="ThemeCB" HorizontalAlignment="Left" VerticalAlignment="Top" Width="125" Margin="50,5,5,5" SelectedIndex="2" SelectionChanged="ComboBox_SelectionChanged">
+            <ComboBoxItem Content="Light" />
+            <ComboBoxItem Content="Dark" />
+            <ComboBoxItem Content="Dark Highlight" />
+        </ComboBox>
+        <internalDialogs:ProgressInternalDialog x:Name="progressDialog" 
+                                                CloseOnEscape="False" 
+                                                ProgressDialogBackground="{DynamicResource DeltaSql.ProgressBox.Background}" 
+                                                TitleAreaBackground="{DynamicResource DeltaSql.ProgressBox.Title.Background}" 
+                                                Foreground="{DynamicResource DeltaSql.ProgressBox.Foreground}"
+                                                Visibility="{Binding ProgressViewModel.ProgressDialogVisbility, FallbackValue=Collapsed}" 
+                                                ProgressDialogMessage="{Binding ProgressViewModel.ProgressMessage}"
+                                                Title="{Binding ProgressViewModel.ProgressTitle}" ResizeGripVisibility="Collapsed"
+                                                ProgressValue="{Binding ProgressViewModel.ProgressValue}"
+                                                FocusParent="{Binding ElementName=mainGrid}">
+            <internalDialogs:ProgressInternalDialog.CloseButtonStyle>
+                <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                </Style>
+            </internalDialogs:ProgressInternalDialog.CloseButtonStyle>
+            <internalDialogs:ProgressInternalDialog.ProgressBarStyle>
+                <Style TargetType="ProgressBar" BasedOn="{StaticResource {x:Type ProgressBar}}">
+                    <Setter Property="IsIndeterminate" Value="{Binding ProgressViewModel.ProgressIsIndeterminate}" />
+                    <Setter Property="Maximum" Value="{Binding ProgressViewModel.ProgressMax}" />
+                    <Setter Property="Minimum" Value="{Binding ProgressViewModel.ProgressMin}" />
+                    <Setter Property="Height" Value="20" />
+                </Style>
+            </internalDialogs:ProgressInternalDialog.ProgressBarStyle>
+        </internalDialogs:ProgressInternalDialog>
+        <internalDialogs:MessageBoxInternalDialog x:Name="messageBoxInternalDialog"
+                                                  Grid.Row="0" Grid.RowSpan="2"
+                                                  Foreground="{DynamicResource DeltaSql.MessageBox.Foreground}" 
+                                                  MessageBoxBackground="{DynamicResource DeltaSql.MessageBox}" 
+                                                  TitleAreaBackground="{DynamicResource DeltaSql.MessageBox.Title}" 
+                                                  ButtonAreaBackground="{DynamicResource DeltaSql.MessageBox.ButtonArea}"
+                                                  Visibility="{Binding MessageBoxViewModel.MessageBoxVisibility, FallbackValue=Collapsed}" 
+                                                  Message="{Binding MessageBoxViewModel.MessageBoxMessage}"
+                                                  Title="{Binding MessageBoxViewModel.MessageBoxTitle}" MessageBoxImage="{Binding MessageBoxViewModel.MessageBoxImage}"
+                                                  Result="{Binding MessageBoxViewModel.MessageBoxResult, Mode=TwoWay}" IsModal="{Binding MessageBoxViewModel.MessageBoxIsModal}"
+                                                  MessageBoxButton="{Binding MessageBoxViewModel.MessageBoxButton}"
+                                                  FocusParent="{Binding ElementName=mainGrid}">
+            <internalDialogs:MessageBoxInternalDialog.CloseButtonStyle>
+                <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="BorderBrush" Value="Transparent" />
+                    <Setter Property="BorderThickness" Value="0" />
+                    <Setter Property="Content" Value="{StaticResource CloseX}" />
+                </Style>
+            </internalDialogs:MessageBoxInternalDialog.CloseButtonStyle>
+            <internalDialogs:MessageBoxInternalDialog.ButtonStyle>
+                <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                    <Setter Property="MinWidth" Value="50" />
+                </Style>
+            </internalDialogs:MessageBoxInternalDialog.ButtonStyle>
+        </internalDialogs:MessageBoxInternalDialog>
     </Grid>
 </Window>

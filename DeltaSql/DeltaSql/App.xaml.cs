@@ -1,4 +1,6 @@
 ﻿using DeltaSql.Properties;
+using DeltaSql.Services;
+using DeltaSql.Theming;
 using DeltaSql.ViewModels;
 using SimpleLogger;
 using System;
@@ -20,6 +22,7 @@ namespace DeltaSql
             #region Service Initialization
 
             ServiceLocator.Instance.Logger = new Logger();
+            ServiceLocator.Instance.ThemingService = new ThemingService();
 
             #endregion
 
@@ -96,7 +99,7 @@ namespace DeltaSql
 
             #region Theming
 
-
+            ServiceLocator.Instance.ThemingService.Theme = (Theme)Settings.Default.Theme;
 
             #endregion
         }

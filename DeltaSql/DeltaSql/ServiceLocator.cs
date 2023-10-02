@@ -1,4 +1,5 @@
-﻿using DeltaSql.ViewModels;
+﻿using DeltaSql.Services;
+using DeltaSql.ViewModels;
 using SimpleLogger;
 
 namespace DeltaSql
@@ -30,6 +31,8 @@ namespace DeltaSql
         public Logger Logger { get; set; }
 
         public MainWindowViewModel MainWindowViewModel { get; set; }
+
+        public ThemingService ThemingService { get; set; }
 
         #endregion
 

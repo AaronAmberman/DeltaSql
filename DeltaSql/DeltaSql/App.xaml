@@ -3,16 +3,38 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:DeltaSql"
              xmlns:converters="clr-namespace:DeltaSql.Converters"
+             xmlns:Theme="clr-namespace:DeltaSql.Theming"
              StartupUri="MainWindow.xaml"
              Startup="Application_Startup" Exit="Application_Exit"
              DispatcherUnhandledException="Application_DispatcherUnhandledException">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/Theming/DarkHighlight/Colors.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Theming/DarkHighlight/Brushes.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Theming/DarkHighlight/CustomControlsDarkTheme.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Theming/DarkHighlight/DarkThemeHighlight.xaml" />
+                <Theme:ThemeDictionary Source="pack://application:,,,/Theming/DarkHighlight/Colors.xaml"
+                                       DarkSource="pack://application:,,,/Theming/Dark/Colors.xaml"
+                                       DarkHighlightSource="pack://application:,,,/Theming/DarkHighlight/Colors.xaml"
+                                       LightSource="pack://application:,,,/Theming/Light/Colors.xaml" />
+
+                <Theme:ThemeDictionary Source="pack://application:,,,/Theming/DarkHighlight/Brushes.xaml"
+                                       DarkSource="pack://application:,,,/Theming/Dark/Brushes.xaml"
+                                       DarkHighlightSource="pack://application:,,,/Theming/DarkHighlight/Brushes.xaml"
+                                       LightSource="pack://application:,,,/Theming/Light/Brushes.xaml" />
+
+                <Theme:ThemeDictionary Source="pack://application:,,,/Theming/DarkHighlight/CustomControlsDarkHighlightTheme.xaml"
+                                       DarkSource="pack://application:,,,/Theming/Dark/CustomControlsDarkTheme.xaml"
+                                       DarkHighlightSource="pack://application:,,,/Theming/DarkHighlight/CustomControlsDarkHighlightTheme.xaml"
+                                       LightSource="pack://application:,,,/Theming/Light/CustomControlsLightTheme.xaml" />
+
+                <Theme:ThemeDictionary Source="pack://application:,,,/Theming/DarkHighlight/DarkHighlightTheme.xaml"
+                                       DarkSource="pack://application:,,,/Theming/Dark/DarkTheme.xaml"
+                                       DarkHighlightSource="pack://application:,,,/Theming/DarkHighlight/DarkHighlightTheme.xaml"
+                                       LightSource="pack://application:,,,/Theming/Light/LightTheme.xaml" />
+
+                <Theme:ThemeDictionary Source="pack://application:,,,/Theming/DarkHighlight/AppTheme.xaml"
+                                       DarkSource="pack://application:,,,/Theming/Dark/AppTheme.xaml"
+                                       DarkHighlightSource="pack://application:,,,/Theming/DarkHighlight/AppTheme.xaml"
+                                       LightSource="pack://application:,,,/Theming/Light/AppTheme.xaml" />
+                
                 <ResourceDictionary Source="pack://application:,,,/WpfImagery.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
@@ -21,21 +43,6 @@
             <converters:EqualsMultiConverter x:Key="EqualsMultiConverter" />
             <converters:NotEqualsConverter x:Key="NotEqualsConverter" />
             <converters:NotEqualsMultiConverter x:Key="NotEqualsMultiConverter" />
-
-            <!-- Custom Styles -->
-            <Style x:Key="GridStyle" TargetType="Grid">
-                <Setter Property="Background" Value="{DynamicResource DeltaSql.Grid}" />
-            </Style>
-            <Style x:Key="TextBlockStyleDark" TargetType="TextBlock">
-                <Setter Property="Foreground" Value="{DynamicResource DeltaSql.Foreground.Dark}" />
-            </Style>
-            <Style x:Key="TextBlockStyleLight" TargetType="TextBlock">
-                <Setter Property="Foreground" Value="{DynamicResource DeltaSql.Foreground.Light}" />
-            </Style>
-            <Style x:Key="BorderStyle" TargetType="Border">
-                <Setter Property="BorderBrush" Value="{DynamicResource DeltaSql.Border}" />
-                <Setter Property="BorderThickness" Value="1" />
-            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

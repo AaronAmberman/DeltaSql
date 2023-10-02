@@ -392,11 +392,4 @@
     <Color x:Key="TreeViewItem.TreeArrow.Checked.Border.Color">#FF1F1F1F</Color>
     <Color x:Key="TreeViewItem.TreeArrow.MouseOver.Checked.Background.Color">#FFFFFFFF</Color>
     <Color x:Key="TreeViewItem.TreeArrow.MouseOver.Checked.Border.Color">#FFFFFFFF</Color>
-
-    <!-- 
-        WPF Imagery
-    -->
-    <Color x:Key="AppIcon.First.Color">#FFFACC6B</Color> <!-- PaletteBase3 -->
-    <Color x:Key="AppIcon.Second.Color">#FFF5B82E</Color> <!-- PaletteBase6 -->
-    <Color x:Key="AppIcon.Third.Color">#FF000000</Color>
 </ResourceDictionary>
