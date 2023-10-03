@@ -8,7 +8,6 @@ namespace DeltaSql.Theming
         #region Fields
 
         private Uri _darkSource;
-        private Uri _darkHighlightSource;
         private Uri _lightSource;
 
         #endregion
@@ -21,15 +20,6 @@ namespace DeltaSql.Theming
             set
             {
                 _darkSource = value;
-            }
-        }
-
-        public Uri DarkHighlightSource
-        {
-            get => _darkHighlightSource;
-            set
-            {
-                _darkHighlightSource = value;
             }
         }
 
@@ -52,9 +42,6 @@ namespace DeltaSql.Theming
             {
                 case Theme.Dark:
                     Source = _darkSource;
-                    break;
-                case Theme.DarkHighlight:
-                    Source = _darkHighlightSource;
                     break;
                 case Theme.Light:
                     Source = _lightSource;

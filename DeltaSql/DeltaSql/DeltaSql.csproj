@@ -24,11 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Remove="Theming\DarkHighlight\AppTheme.xaml" />
-    <Page Remove="Theming\DarkHighlight\Brushes.xaml" />
-    <Page Remove="Theming\DarkHighlight\Colors.xaml" />
-    <Page Remove="Theming\DarkHighlight\CustomControlsDarkHighlightTheme.xaml" />
-    <Page Remove="Theming\DarkHighlight\DarkHighlightTheme.xaml" />
     <Page Remove="Theming\Dark\AppTheme.xaml" />
     <Page Remove="Theming\Dark\Brushes.xaml" />
     <Page Remove="Theming\Dark\Colors.xaml" />
@@ -65,11 +60,6 @@
     <Resource Include="Images\Icon\DeltaSql-64x64.png" />
     <Resource Include="Images\Icon\DeltaSql.ico" />
     <Resource Include="Images\Icon\DeltaSql.png" />
-    <Resource Include="Theming\DarkHighlight\AppTheme.xaml" />
-    <Resource Include="Theming\DarkHighlight\Brushes.xaml" />
-    <Resource Include="Theming\DarkHighlight\Colors.xaml" />
-    <Resource Include="Theming\DarkHighlight\CustomControlsDarkHighlightTheme.xaml" />
-    <Resource Include="Theming\DarkHighlight\DarkHighlightTheme.xaml" />
     <Resource Include="Theming\Dark\AppTheme.xaml" />
     <Resource Include="Theming\Dark\Brushes.xaml" />
     <Resource Include="Theming\Dark\Colors.xaml" />

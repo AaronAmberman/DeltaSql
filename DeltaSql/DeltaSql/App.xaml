@@ -10,29 +10,24 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <Theme:ThemeDictionary Source="pack://application:,,,/Theming/DarkHighlight/Colors.xaml"
+                <Theme:ThemeDictionary Source="pack://application:,,,/Theming/Dark/Colors.xaml"
                                        DarkSource="pack://application:,,,/Theming/Dark/Colors.xaml"
-                                       DarkHighlightSource="pack://application:,,,/Theming/DarkHighlight/Colors.xaml"
                                        LightSource="pack://application:,,,/Theming/Light/Colors.xaml" />
 
-                <Theme:ThemeDictionary Source="pack://application:,,,/Theming/DarkHighlight/Brushes.xaml"
+                <Theme:ThemeDictionary Source="pack://application:,,,/Theming/Dark/Brushes.xaml"
                                        DarkSource="pack://application:,,,/Theming/Dark/Brushes.xaml"
-                                       DarkHighlightSource="pack://application:,,,/Theming/DarkHighlight/Brushes.xaml"
                                        LightSource="pack://application:,,,/Theming/Light/Brushes.xaml" />
 
-                <Theme:ThemeDictionary Source="pack://application:,,,/Theming/DarkHighlight/CustomControlsDarkHighlightTheme.xaml"
+                <Theme:ThemeDictionary Source="pack://application:,,,/Theming/Dark/CustomControlsDarkTheme.xaml"
                                        DarkSource="pack://application:,,,/Theming/Dark/CustomControlsDarkTheme.xaml"
-                                       DarkHighlightSource="pack://application:,,,/Theming/DarkHighlight/CustomControlsDarkHighlightTheme.xaml"
                                        LightSource="pack://application:,,,/Theming/Light/CustomControlsLightTheme.xaml" />
 
-                <Theme:ThemeDictionary Source="pack://application:,,,/Theming/DarkHighlight/DarkHighlightTheme.xaml"
+                <Theme:ThemeDictionary Source="pack://application:,,,/Theming/Dark/DarkTheme.xaml"
                                        DarkSource="pack://application:,,,/Theming/Dark/DarkTheme.xaml"
-                                       DarkHighlightSource="pack://application:,,,/Theming/DarkHighlight/DarkHighlightTheme.xaml"
                                        LightSource="pack://application:,,,/Theming/Light/LightTheme.xaml" />
 
-                <Theme:ThemeDictionary Source="pack://application:,,,/Theming/DarkHighlight/AppTheme.xaml"
+                <Theme:ThemeDictionary Source="pack://application:,,,/Theming/Dark/AppTheme.xaml"
                                        DarkSource="pack://application:,,,/Theming/Dark/AppTheme.xaml"
-                                       DarkHighlightSource="pack://application:,,,/Theming/DarkHighlight/AppTheme.xaml"
                                        LightSource="pack://application:,,,/Theming/Light/AppTheme.xaml" />
                 
                 <ResourceDictionary Source="pack://application:,,,/WpfImagery.xaml" />
