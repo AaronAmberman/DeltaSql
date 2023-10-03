@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Threading;
 using WPF.InternalDialogs;
 using WPF.Translations;
@@ -10,6 +11,7 @@ namespace DeltaSql.ViewModels
     {
         #region Fields
 
+        private ICommand showSettingsCommand;
         private Translation translations;
         private string version;
 
@@ -22,6 +24,10 @@ namespace DeltaSql.ViewModels
         public MessageBoxViewModel MessageBoxViewModel { get; set; }
 
         public ProgressViewModel ProgressViewModel { get; set; }
+
+        public SettingsViewModel SettingsViewModel { get; set; }
+
+        public ICommand ShowSettingsCommand => showSettingsCommand ??= new RelayCommand(ShowSettings);
 
         public dynamic Translations 
         { 
@@ -103,6 +109,11 @@ namespace DeltaSql.ViewModels
             MessageBoxViewModel.MessageBoxVisibility = Visibility.Visible; // this will block because of is modal
 
             return MessageBoxViewModel.MessageBoxResult;
+        }
+
+        private void ShowSettings()
+        {
+            SettingsViewModel.Visibility = Visibility.Visible;
         }
 
         #endregion

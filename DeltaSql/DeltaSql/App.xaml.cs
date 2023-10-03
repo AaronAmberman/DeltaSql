@@ -77,7 +77,7 @@ namespace DeltaSql
             if (string.IsNullOrWhiteSpace(Settings.Default.Language))
             {
                 // load english if the language is missing from settings
-                Settings.Default.Language = "en-US";
+                Settings.Default.Language = "en";
                 Settings.Default.Save();
             }
 
@@ -88,18 +88,22 @@ namespace DeltaSql
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(Settings.Default.Language);
 
             // set translations
-            Translation translation = new Translation(new ResourceDictionary 
-            { 
-                Source = new Uri($"pack://application:,,,/Translations/Translations.{Settings.Default.Language}.xaml") 
+            ServiceLocator.Instance.MainWindowViewModel.Translations = new Translation(new ResourceDictionary
+            {
+                Source = new Uri($"pack://application:,,,/Translations/Translations.{Settings.Default.Language}.xaml")
             }, new ResourceDictionaryTranslationDataProvider(), false);
 
-            ServiceLocator.Instance.MainWindowViewModel.Translations = translation;
+            // need translations for view model
+            mainWindowViewModel.SettingsViewModel = new SettingsViewModel();
+            mainWindowViewModel.SettingsViewModel.SetLanguage(Settings.Default.Language);
 
             #endregion
 
             #region Theming
 
             ServiceLocator.Instance.ThemingService.Theme = (Theme)Settings.Default.Theme;
+
+            mainWindowViewModel.SettingsViewModel.Theme = Settings.Default.Theme;
 
             #endregion
         }
@@ -115,8 +119,9 @@ namespace DeltaSql
             {
                 ServiceLocator.Instance.Logger.Error($"An unhandled exception occurred. Details:{Environment.NewLine}{e.Exception}");
 
-                MessageBox.Show("Unhandled exception occurred. We have logged the issue.",
-                    "Unhandled Exception", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(ServiceLocator.Instance.MainWindowViewModel?.Translations.UnhandledErrorMessage ?? "Unhandled exception occurred. We have logged the issue.",
+                    ServiceLocator.Instance.MainWindowViewModel?.Translations.UnhandledErrorTitle ?? "Unhandled Exception", 
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
             catch (Exception ex)
             {

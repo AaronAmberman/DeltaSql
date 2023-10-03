@@ -14,15 +14,5 @@ namespace DeltaSql
 
             InitializeComponent();
         }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            ServiceLocator.Instance.MainWindowViewModel.ShowMessageBox("Hello");
-        }
-
-        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ServiceLocator.Instance.ThemingService.Theme = (Theme)ThemeCB.SelectedIndex;
-        }
     }
 }

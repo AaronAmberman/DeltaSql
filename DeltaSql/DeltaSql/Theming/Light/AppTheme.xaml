@@ -11,9 +11,9 @@
     <Color x:Key="DeltaSql.Foreground.Error.Color">#FFFF0000</Color>
     <Color x:Key="DeltaSql.Border.Color">#FF000000</Color>
     <Color x:Key="DeltaSql.Grid.Color">#FFFFFFFF</Color>
-    <Color x:Key="DeltaSql.InternalDialog.Color">#FF2F2F2F</Color>
-    <Color x:Key="DeltaSql.InternalDialog.Title.Color">#FF101010</Color>
-    <Color x:Key="DeltaSql.InternalDialog.ButtonArea.Color">#FF2F2F2F</Color>
+    <Color x:Key="DeltaSql.InternalDialog.Color">#FFDDDDDD</Color>
+    <Color x:Key="DeltaSql.InternalDialog.Title.Color">#FFBBBBBB</Color>
+    <Color x:Key="DeltaSql.InternalDialog.ButtonArea.Color">#FFBBBBBB</Color>
     <Color x:Key="DeltaSql.MessageBox.Color">#FFDDDDDD</Color>
     <Color x:Key="DeltaSql.MessageBox.Foreground.Color">#FF000000</Color>
     <Color x:Key="DeltaSql.MessageBox.Title.Color">#FFBBBBBB</Color>

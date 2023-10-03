@@ -12,12 +12,145 @@
         Icon="pack://application:,,,/Images/Icon/DeltaSql.ico"
         d:DataContext="{d:DesignInstance {x:Type viewModels:MainWindowViewModel}}">
     <Grid x:Name="mainGrid" Style="{StaticResource GridStyle}">
-        <Button Content="Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5" Click="Button_Click" />
-        <ComboBox x:Name="ThemeCB" HorizontalAlignment="Left" VerticalAlignment="Top" Width="125" Margin="50,5,5,5" SelectedIndex="1" 
-                  SelectionChanged="ComboBox_SelectionChanged">
-            <ComboBoxItem Content="Light" />
-            <ComboBoxItem Content="Dark" />
-        </ComboBox>
+        <Grid x:Name="innerMainGrid" Margin="5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <!-- header -->
+                    <Button BorderThickness="0" HorizontalAlignment="Right" Content="{StaticResource Settings}" Command="{Binding ShowSettingsCommand}"
+                            ToolTip="{Binding Translations.Settings}" />
+                </Grid>
+                <Grid Grid.Row="1">
+                    <!-- content -->
+                </Grid>
+                <Grid Grid.Row="2">
+                    <!-- footer -->
+                </Grid>
+            </Grid>
+        </Grid>
+        <internalDialogs:MovableResizableInternalDialog x:Name="settingsDialog" Grid.Row="0" Grid.RowSpan="2"
+                                                        ResizableMinHeight="256" ResizableMinWidth="512" ResizableMaxHeight="512" ResizableMaxWidth="768"
+                                                        CloseOnEscape="False"
+                                                        Foreground="{DynamicResource DeltaSql.Foreground}" 
+                                                        TitleAreaBackground="{DynamicResource DeltaSql.InternalDialog.Title}" 
+                                                        AnswerAreaBackground="{DynamicResource DeltaSql.InternalDialog.ButtonArea}" 
+                                                        ContentBackground="{DynamicResource DeltaSql.InternalDialog}"
+                                                        TitleContent="{Binding Translations.Settings, FallbackValue=Settings}" 
+                                                        Visibility="{Binding SettingsViewModel.Visibility, FallbackValue=Collapsed}"
+                                                        Result="{Binding SettingsViewModel.Result, Mode=OneWayToSource}"
+                                                        FocusParent="{Binding ElementName=mainGrid}">
+            <internalDialogs:MovableResizableInternalDialog.CloseButtonStyle>
+                <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                </Style>
+            </internalDialogs:MovableResizableInternalDialog.CloseButtonStyle>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Margin="0,0,5,0" Padding="0,1,0,0" 
+                               Text="{Binding Translations.Language, FallbackValue=Language}"  />
+                    <ComboBox Grid.Column="1" ItemsSource="{Binding SettingsViewModel.Languages}" SelectedItem="{Binding SettingsViewModel.SelectedLanguage}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Item2}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </Grid>
+                <Grid Grid.Row="1" Margin="0,20,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Margin="0,0,5,0" Padding="0,1,0,0" 
+                               Text="{Binding Translations.Theme, FallbackValue=Theme}"  />
+                    <ComboBox Grid.Column="1" SelectedIndex="{Binding SettingsViewModel.Theme}">
+                        <ComboBoxItem Content="Light" />
+                        <ComboBoxItem Content="Dark" />
+                    </ComboBox>
+                </Grid>
+                <Grid Grid.Row="2" Margin="0,20,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Column="0" Grid.Row="0" Margin="0,0,5,0" Padding="0,1,0,0"
+                               Text="{Binding Translations.LogFile, FallbackValue=Log file}" />
+                    <TextBox x:Name="logFileTextBox" Grid.Column="1" Grid.Row="0" Margin="0,0,5,0"
+                             Text="{Binding SettingsViewModel.LogPath}" />
+                    <Button Grid.Column="2" Grid.Row="0"
+                            Content="{Binding Translations.Browse, FallbackValue=Browse}"
+                            Command="{Binding SettingsViewModel.BrowseLogCommand}" />
+                    <TextBlock Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1" FontStyle="Italic" FontSize="10" TextWrapping="Wrap"
+                               Text="{Binding Translations.LogSettingFileNote, FallbackValue=Note: by default the application will log to where it is executing (unless this setting is set) or if that cannot be determined for some reason then it will log to the desktop.}" />
+                </Grid>
+            </Grid>
+            <internalDialogs:MovableResizableInternalDialog.AnswerAreaContent>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" Width="18" Height="18" Background="Transparent" BorderThickness="0" Padding="0,1,0,0"
+                            Content="{StaticResource About}" ToolTip="{Binding Translations.About}" Command="{Binding SettingsViewModel.AboutCommand}" />
+                    <Button Grid.Column="2" Margin="0,0,5,0" MinWidth="50"
+                            Content="{Binding Translations.OK, FallbackValue=OK}" 
+                            Command="{Binding SettingsViewModel.OkCommand}" />
+                    <Button Grid.Column="3" MinWidth="50"
+                            Content="{Binding Translations.Cancel, FallbackValue=Cancel}" 
+                            Command="{Binding SettingsViewModel.CancelCommand}" />
+                </Grid>
+            </internalDialogs:MovableResizableInternalDialog.AnswerAreaContent>
+        </internalDialogs:MovableResizableInternalDialog>
+        <internalDialogs:MovableResizableInternalDialog x:Name="aboutDialog" Grid.Row="0" Grid.RowSpan="2" 
+                                                        Foreground="{DynamicResource DeltaSql.Foreground}"
+                                                        TitleAreaBackground="{DynamicResource DeltaSql.InternalDialog.Title}" 
+                                                        AnswerAreaBackground="{DynamicResource DeltaSql.InternalDialog.ButtonArea}" 
+                                                        ContentBackground="{DynamicResource DeltaSql.InternalDialog}"
+                                                        TitleContent="{Binding Translations.About, FallbackValue=About}"
+                                                        Visibility="{Binding SettingsViewModel.AboutBoxVisibility, FallbackValue=Collapsed}"
+                                                        FocusParent="{Binding ElementName=mainGrid}">
+            <internalDialogs:MovableResizableInternalDialog.CloseButtonStyle>
+                <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                    <Setter Property="Focusable" Value="False" />
+                    <Setter Property="Background" Value="#00000000" />
+                    <Setter Property="BorderBrush" Value="#00000000" />
+                    <Setter Property="BorderThickness" Value="0" />
+                    <Setter Property="Content" Value="{StaticResource CloseX}" />
+                </Style>
+            </internalDialogs:MovableResizableInternalDialog.CloseButtonStyle>
+            <Grid>
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <TextBlock TextWrapping="Wrap" Style="{StaticResource TextBlockForegroundStyle}">
+                        <Run Text="{Binding Translations.AboutAppMessage, FallbackValue=About application}" />
+                        <LineBreak /><LineBreak />
+                        <Italic>
+                            <Run Text="{Binding Translations.Version, FallbackValue=Version}" />
+                            <Run Text="{Binding Version, Mode=OneWay}" />
+                        </Italic>
+                    </TextBlock>
+                </ScrollViewer>
+            </Grid>
+        </internalDialogs:MovableResizableInternalDialog>
         <internalDialogs:ProgressInternalDialog x:Name="progressDialog" 
                                                 CloseOnEscape="False" 
                                                 ProgressDialogBackground="{DynamicResource DeltaSql.ProgressBox.Background}" 
