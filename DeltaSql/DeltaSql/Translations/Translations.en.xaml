@@ -5,11 +5,9 @@
     <sys:String x:Key="AboutAppMessage">This application can help compare the differences between Microsoft SQL Server instances.</sys:String>
     <sys:String x:Key="Browse">Browse</sys:String>
     <sys:String x:Key="BrowseTitle">Browse for File</sys:String>
-    <sys:String x:Key="Dark">Dark</sys:String>
-    <sys:String x:Key="MainWindowTitle">Delta SQL</sys:String>
-    <sys:String x:Key="Settings">Settings</sys:String>
     <sys:String x:Key="Cancel">Cancel</sys:String>
     <sys:String x:Key="Chinese">中文</sys:String> <!-- Chinese Simplified -->
+    <sys:String x:Key="Dark">Dark</sys:String>
     <sys:String x:Key="English">English</sys:String>
     <sys:String x:Key="Error">Error</sys:String>
     <sys:String x:Key="Errors">Errors</sys:String>
@@ -26,12 +24,14 @@
     <sys:String x:Key="LogSettingFileNote">Note: by default the application will log to where it is executing (unless this setting is set), or if that cannot be determined for some reason then it will log to the desktop.</sys:String>
     <sys:String x:Key="LogWriteErrorMessage">An error occurred attempting to write to the log file. Unable to log.</sys:String>
     <sys:String x:Key="LogWriteErrorTitle">Log Write Error</sys:String>
+    <sys:String x:Key="MainWindowTitle">Delta SQL</sys:String>
     <sys:String x:Key="Name">Name</sys:String>
     <sys:String x:Key="No">No</sys:String>
     <sys:String x:Key="Norwegian">Norsk</sys:String>
     <sys:String x:Key="OK">OK</sys:String>
     <sys:String x:Key="Portuguese">português</sys:String>
     <sys:String x:Key="Russian">Русский</sys:String>
+    <sys:String x:Key="Settings">Settings</sys:String>
     <sys:String x:Key="Spanish">español</sys:String>
     <sys:String x:Key="Theme">Theme</sys:String>
     <sys:String x:Key="UnhandledErrorMessage">An unhandled exception occurred in the application. We have logged it. Please see log for further details.</sys:String>
