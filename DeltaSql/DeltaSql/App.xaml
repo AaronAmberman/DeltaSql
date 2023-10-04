@@ -3,30 +3,30 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:DeltaSql"
              xmlns:converters="clr-namespace:DeltaSql.Converters"
-             xmlns:Theme="clr-namespace:DeltaSql.Theming"
+             xmlns:theme="clr-namespace:DeltaSql.Theming"
              StartupUri="MainWindow.xaml"
              Startup="Application_Startup" Exit="Application_Exit"
              DispatcherUnhandledException="Application_DispatcherUnhandledException">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <Theme:ThemeDictionary Source="pack://application:,,,/Theming/Dark/Colors.xaml"
+                <theme:ThemeDictionary Source="pack://application:,,,/Theming/Dark/Colors.xaml"
                                        DarkSource="pack://application:,,,/Theming/Dark/Colors.xaml"
                                        LightSource="pack://application:,,,/Theming/Light/Colors.xaml" />
 
-                <Theme:ThemeDictionary Source="pack://application:,,,/Theming/Dark/Brushes.xaml"
+                <theme:ThemeDictionary Source="pack://application:,,,/Theming/Dark/Brushes.xaml"
                                        DarkSource="pack://application:,,,/Theming/Dark/Brushes.xaml"
                                        LightSource="pack://application:,,,/Theming/Light/Brushes.xaml" />
 
-                <Theme:ThemeDictionary Source="pack://application:,,,/Theming/Dark/CustomControlsDarkTheme.xaml"
+                <theme:ThemeDictionary Source="pack://application:,,,/Theming/Dark/CustomControlsDarkTheme.xaml"
                                        DarkSource="pack://application:,,,/Theming/Dark/CustomControlsDarkTheme.xaml"
                                        LightSource="pack://application:,,,/Theming/Light/CustomControlsLightTheme.xaml" />
 
-                <Theme:ThemeDictionary Source="pack://application:,,,/Theming/Dark/DarkTheme.xaml"
+                <theme:ThemeDictionary Source="pack://application:,,,/Theming/Dark/DarkTheme.xaml"
                                        DarkSource="pack://application:,,,/Theming/Dark/DarkTheme.xaml"
                                        LightSource="pack://application:,,,/Theming/Light/LightTheme.xaml" />
 
-                <Theme:ThemeDictionary Source="pack://application:,,,/Theming/Dark/AppTheme.xaml"
+                <theme:ThemeDictionary Source="pack://application:,,,/Theming/Dark/AppTheme.xaml"
                                        DarkSource="pack://application:,,,/Theming/Dark/AppTheme.xaml"
                                        LightSource="pack://application:,,,/Theming/Light/AppTheme.xaml" />
                 
