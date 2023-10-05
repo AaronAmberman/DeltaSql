@@ -1,6 +1,12 @@
-﻿using System;
+﻿using SimpleLogger;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
 using WPF.InternalDialogs;
 using WPF.Translations;
@@ -13,6 +19,7 @@ namespace DeltaSql.ViewModels
 
         private ICommand showSettingsCommand;
         private Translation translations;
+        private RichTextBox outputRichTextBox;
         private string version;
 
         #endregion
@@ -20,6 +27,8 @@ namespace DeltaSql.ViewModels
         #region Properties
 
         public Dispatcher Dispatcher { get; set; }
+
+        public Func<RichTextBox> GetOutputRtb { get; set; }
 
         public MessageBoxViewModel MessageBoxViewModel { get; set; }
 
@@ -62,6 +71,53 @@ namespace DeltaSql.ViewModels
         public void Invoke(Action action)
         {
             Dispatcher.Invoke(action);
+        }
+
+        public void LoggingService_LogEntry(object sender, (LogLevel, string) e)
+        {
+            if (outputRichTextBox == null) outputRichTextBox = GetOutputRtb();
+
+            if (outputRichTextBox.Document == null)
+            {
+                outputRichTextBox.Document = new FlowDocument();
+                outputRichTextBox.Document.Blocks.Clear();
+            }
+
+            List<Block> emptyBlocks = outputRichTextBox.Document.Blocks.Where(b => string.IsNullOrEmpty(new TextRange(b.ContentStart, b.ContentEnd).Text)).ToList();
+
+            foreach (Block b in emptyBlocks) outputRichTextBox.Document.Blocks.Remove(b);
+
+            if (string.IsNullOrWhiteSpace(e.Item2)) return;
+
+            Paragraph p = new Paragraph
+            {
+                Margin = new Thickness(0),
+                Padding = new Thickness(0)
+            };
+
+            switch (e.Item1)
+            {
+                case LogLevel.Debug:
+                    p.Inlines.Add(new Italic(new Run(e.Item2) { Foreground = Brushes.CornflowerBlue }));
+                    break;
+                case LogLevel.Error:
+                    p.Inlines.Add(new Bold(new Run(e.Item2) { Foreground = Brushes.Red }));
+                    break;
+                case LogLevel.Fatal:
+                    p.Inlines.Add(new Bold(new Italic(new Run(e.Item2) { Foreground = Brushes.DarkRed })));
+                    break;
+                case LogLevel.Info:
+                    p.Inlines.Add(new Run(e.Item2) { Foreground = Brushes.Black });
+                    break;
+                case LogLevel.Trace:
+                    p.Inlines.Add(new Italic(new Run(e.Item2) { Foreground = Brushes.SandyBrown }));
+                    break;
+                case LogLevel.Warning:
+                    p.Inlines.Add(new Bold(new Run(e.Item2) { Foreground = Brushes.Orange }));
+                    break;
+            }
+
+            outputRichTextBox.Document.Blocks.Add(p);
         }
 
         private void SetMessageBoxState(string message, string title, bool isModal, MessageBoxButton button, MessageBoxInternalDialogImage image, Visibility visibility)

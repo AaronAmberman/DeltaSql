@@ -1,6 +1,5 @@
 ﻿using DeltaSql.Services;
 using DeltaSql.ViewModels;
-using SimpleLogger;
 
 namespace DeltaSql
 {
@@ -27,8 +26,7 @@ namespace DeltaSql
             }
         }
 
-
-        public Logger Logger { get; set; }
+        public LoggingService LoggingService { get; set; }
 
         public MainWindowViewModel MainWindowViewModel { get; set; }
 

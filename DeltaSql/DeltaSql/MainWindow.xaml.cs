@@ -13,6 +13,11 @@ namespace DeltaSql
             DataContext = ServiceLocator.Instance.MainWindowViewModel;
 
             InitializeComponent();
+
+            ServiceLocator.Instance.MainWindowViewModel.GetOutputRtb = () =>
+            {
+                return output;
+            };
         }
     }
 }

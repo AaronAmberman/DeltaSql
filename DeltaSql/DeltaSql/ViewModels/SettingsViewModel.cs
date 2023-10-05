@@ -130,7 +130,6 @@ namespace DeltaSql.ViewModels
             OpenFileDialog ofd = new OpenFileDialog
             {
                 AddExtension = true,
-                CheckFileExists = true,
                 CheckPathExists = true,                
                 FileName = "DeltaSql.log",
                 Filter = "Text Files(*.txt)|*.txt|Log Files(*.log)|*.log",
@@ -177,15 +176,7 @@ namespace DeltaSql.ViewModels
 
             if (!string.IsNullOrWhiteSpace(LogPath))
             {
-                if (!File.Exists(LogPath))
-                {
-                    ServiceLocator.Instance.MainWindowViewModel.ShowMessageBox(ServiceLocator.Instance.MainWindowViewModel.Translations.LogFileNotExistsMessage,
-                        ServiceLocator.Instance.MainWindowViewModel.Translations.LogFileNotExistsTitle, MessageBoxButton.OK, MessageBoxInternalDialogImage.CriticalError);
-
-                    return;
-                }
-
-                ServiceLocator.Instance.Logger.LogFile = LogPath;
+                ServiceLocator.Instance.LoggingService.Logger.LogFile = Path.Combine(Settings.Default.LogPath, "DeltaSql.log");
             }
             else
             {
@@ -197,13 +188,13 @@ namespace DeltaSql.ViewModels
                     if (!string.IsNullOrWhiteSpace(location))
                     {
                         // do not set the setting because the user did not choose the path
-                        ServiceLocator.Instance.Logger.LogFile = Path.Combine(location, "DeltaSql.log");
+                        ServiceLocator.Instance.LoggingService.Logger.LogFile = Path.Combine(location, "DeltaSql.log");
                     }
                 }
                 catch
                 {
                     // we cannot determine location for some reason, use desktop
-                    ServiceLocator.Instance.Logger.LogFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "DeltaSql.log");
+                    ServiceLocator.Instance.LoggingService.Logger.LogFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "DeltaSql.log");
                 }
             }
 

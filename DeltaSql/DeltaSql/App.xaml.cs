@@ -21,7 +21,7 @@ namespace DeltaSql
         {
             #region Service Initialization
 
-            ServiceLocator.Instance.Logger = new Logger();
+            ServiceLocator.Instance.LoggingService = new LoggingService(new Logger());
             ServiceLocator.Instance.ThemingService = new ThemingService();
 
             #endregion
@@ -33,7 +33,7 @@ namespace DeltaSql
                 if (!string.IsNullOrWhiteSpace(Settings.Default.LogPath))
                 {
                     // the setting will be the path only (will not include the filename)
-                    ServiceLocator.Instance.Logger.LogFile = Path.Combine(Settings.Default.LogPath, "DeltaSql.log");
+                    ServiceLocator.Instance.LoggingService.Logger.LogFile = Path.Combine(Settings.Default.LogPath, "DeltaSql.log");
                 }
                 else
                 {
@@ -41,14 +41,14 @@ namespace DeltaSql
 
                     if (!string.IsNullOrWhiteSpace(location))
                     {
-                        ServiceLocator.Instance.Logger.LogFile = Path.Combine(location, "DeltaSql.log");
+                        ServiceLocator.Instance.LoggingService.Logger.LogFile = Path.Combine(location, "DeltaSql.log");
                     }
                 }
             }
             catch
             {
                 // we cannot determine location for some reason, use desktop
-                ServiceLocator.Instance.Logger.LogFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "DeltaSql.log");
+                ServiceLocator.Instance.LoggingService.Logger.LogFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "DeltaSql.log");
             }
 
             #endregion
@@ -60,6 +60,7 @@ namespace DeltaSql
                 MessageBoxViewModel = new MessageBoxViewModel(),
                 ProgressViewModel = new ProgressViewModel()
             };
+            ServiceLocator.Instance.LoggingService.LogEntry += mainWindowViewModel.LoggingService_LogEntry;
 
             ServiceLocator.Instance.MainWindowViewModel = mainWindowViewModel;
 
@@ -117,7 +118,7 @@ namespace DeltaSql
         {
             try
             {
-                ServiceLocator.Instance.Logger.Error($"An unhandled exception occurred. Details:{Environment.NewLine}{e.Exception}");
+                ServiceLocator.Instance.LoggingService.Logger.Fatal($"An unhandled exception occurred. Details:{Environment.NewLine}{e.Exception}");
 
                 MessageBox.Show(ServiceLocator.Instance.MainWindowViewModel?.Translations.UnhandledErrorMessage ?? "Unhandled exception occurred. We have logged the issue.",
                     ServiceLocator.Instance.MainWindowViewModel?.Translations.UnhandledErrorTitle ?? "Unhandled Exception", 
