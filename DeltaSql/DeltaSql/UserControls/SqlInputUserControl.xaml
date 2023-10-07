@@ -23,7 +23,7 @@
             </Grid.RowDefinitions>
             <CheckBox Grid.Row="0" HorizontalAlignment="Right" IsChecked="{Binding ManualMode, Mode=TwoWay}"
                       Content="{Binding Translations.ManualEntry, FallbackValue=Manual entry}" />
-            <Grid Grid.Row="1" Margin="0,10,0,0" Visibility="{Binding VisibilityManualEntry}">
+            <Grid Grid.Row="1" Margin="0,10,0,0" Visibility="{Binding VisibilityManualEntry, FallbackValue=Collapsed}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
