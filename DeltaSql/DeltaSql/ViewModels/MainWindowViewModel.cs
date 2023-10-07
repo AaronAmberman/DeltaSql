@@ -19,7 +19,6 @@ namespace DeltaSql.ViewModels
 
         private ICommand showSettingsCommand;
         private Translation translations;
-        private RichTextBox outputRichTextBox;
         private string version;
 
         #endregion
@@ -28,7 +27,7 @@ namespace DeltaSql.ViewModels
 
         public Dispatcher Dispatcher { get; set; }
 
-        public Func<RichTextBox> GetOutputRtb { get; set; }
+        public RichTextBox RichTextBox { get; set; }
 
         public MessageBoxViewModel MessageBoxViewModel { get; set; }
 
@@ -83,18 +82,18 @@ namespace DeltaSql.ViewModels
 
         public void LoggingService_LogEntry(object sender, (LogLevel, string) e)
         {
-            if (outputRichTextBox == null) outputRichTextBox = GetOutputRtb();
+            if (RichTextBox == null) return;
 
-            if (outputRichTextBox.Document == null)
+            if (RichTextBox.Document == null)
             {
-                outputRichTextBox.Document = new FlowDocument();
-                outputRichTextBox.Document.Blocks.Clear();
+                RichTextBox.Document = new FlowDocument();
+                RichTextBox.Document.Blocks.Clear();
             }
 
             // if blank lines are desired in the output feed then use a space
-            List<Block> emptyBlocks = outputRichTextBox.Document.Blocks.Where(b => string.IsNullOrEmpty(new TextRange(b.ContentStart, b.ContentEnd).Text)).ToList();
+            List<Block> emptyBlocks = RichTextBox.Document.Blocks.Where(b => string.IsNullOrEmpty(new TextRange(b.ContentStart, b.ContentEnd).Text)).ToList();
 
-            foreach (Block b in emptyBlocks) outputRichTextBox.Document.Blocks.Remove(b);
+            foreach (Block b in emptyBlocks) RichTextBox.Document.Blocks.Remove(b);
 
             if (string.IsNullOrWhiteSpace(e.Item2)) return;
 
@@ -114,7 +113,7 @@ namespace DeltaSql.ViewModels
                 case LogLevel.Warning: p.Inlines.Add(new Bold(new Run(e.Item2) { Foreground = Brushes.Orange })); break;
             }
 
-            outputRichTextBox.Document.Blocks.Add(p);
+            RichTextBox.Document.Blocks.Add(p);
         }
 
         private void SetMessageBoxState(string message, string title, bool isModal, MessageBoxButton button, MessageBoxInternalDialogImage image, Visibility visibility)
