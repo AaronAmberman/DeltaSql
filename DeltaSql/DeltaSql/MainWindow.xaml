@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DeltaSql"
         xmlns:viewModels="clr-namespace:DeltaSql.ViewModels"
+        xmlns:uc="clr-namespace:DeltaSql.UserControls"
         xmlns:internalDialogs="clr-namespace:WPF.InternalDialogs;assembly=WPF.InternalDialogs"
         mc:Ignorable="d"
         Title="{Binding Translations.MainWindowTitle, FallbackValue=Delta SQL}" 
@@ -34,48 +35,38 @@
                         <ColumnDefinition Width="3" />
                         <ColumnDefinition Width="*" MinWidth="50" />
                     </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="0" Margin="0,0,5,0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-                        <Grid Grid.Row="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <Button Grid.Column="1" Background="Transparent" BorderThickness="0" Content="{StaticResource Remove}" />
-                        </Grid>
-                        <TabControl Grid.Row="1">
+                    <Grid x:Name="inputOneGrid" Grid.Column="0" Margin="0,0,5,0">
+                        <TabControl Margin="0,2,0,0">
                             <TabItem Header="Temp">
 
                             </TabItem>
                         </TabControl>
-                        <internalDialogs:InternalDialog>
-
+                        <Button Background="Transparent" BorderThickness="0" HorizontalAlignment="Right" VerticalAlignment="Top" 
+                                Content="{StaticResource Disconnect}" />
+                        <internalDialogs:InternalDialog Grid.Row="0" Grid.RowSpan="2" CloseOnEscape="False" Background="#AA000000" IsModal="False"
+                                                        FocusParent="{Binding ElementName=inputOneGrid}"
+                                                        Visibility="{Binding SqlInputViewModelLeft.Visibility}">
+                            <Grid>
+                                <uc:SqlInputUserControl Margin="5" DataContext="{Binding SqlInputViewModelLeft}" />
+                            </Grid>
                         </internalDialogs:InternalDialog>
                     </Grid>
                     <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" Width="3" ResizeBehavior="PreviousAndNext" ResizeDirection="Columns"
                                   Background="{DynamicResource DeltaSql.GridSplitter}" />
-                    <Grid Grid.Column="2" Margin="5,0,0,0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-                        <Grid Grid.Row="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <Button Grid.Column="1" Background="Transparent" BorderThickness="0" Content="{StaticResource Remove}" />
-                        </Grid>
-                        <TabControl Grid.Row="1">
+                    <Grid x:Name="inputTwoGrid" Grid.Column="2" Margin="5,0,0,0">
+                        <TabControl Margin="0,2,0,0">
                             <TabItem Header="Temp">
 
                             </TabItem>
                         </TabControl>
-                        <internalDialogs:InternalDialog>
-                            
+                        <Button Background="Transparent" BorderThickness="0" HorizontalAlignment="Right" VerticalAlignment="Top" 
+                                Content="{StaticResource Disconnect}" />
+                        <internalDialogs:InternalDialog Grid.Row="0" Grid.RowSpan="2" CloseOnEscape="False" Background="#AA000000" IsModal="False"
+                                                        FocusParent="{Binding ElementName=inputTwoGrid}"
+                                                        Visibility="{Binding SqlInputViewModelRight.Visibility}">
+                            <Grid>
+                                <uc:SqlInputUserControl Margin="5" DataContext="{Binding SqlInputViewModelRight}" />
+                            </Grid>
                         </internalDialogs:InternalDialog>
                     </Grid>
                 </Grid>

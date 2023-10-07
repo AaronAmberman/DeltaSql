@@ -38,12 +38,20 @@ namespace DeltaSql.ViewModels
 
         public ICommand ShowSettingsCommand => showSettingsCommand ??= new RelayCommand(ShowSettings);
 
+        public SqlInputViewModel SqlInputViewModelLeft { get; set; }
+
+        public SqlInputViewModel SqlInputViewModelRight { get; set; }
+
         public dynamic Translations 
         { 
             get => translations; 
             set
             {
                 translations = value;
+
+                SqlInputViewModelLeft.Translations = value;
+                SqlInputViewModelRight.Translations = value;
+
                 OnPropertyChanged();
                 
             }
@@ -83,6 +91,7 @@ namespace DeltaSql.ViewModels
                 outputRichTextBox.Document.Blocks.Clear();
             }
 
+            // if blank lines are desired in the output feed then use a space
             List<Block> emptyBlocks = outputRichTextBox.Document.Blocks.Where(b => string.IsNullOrEmpty(new TextRange(b.ContentStart, b.ContentEnd).Text)).ToList();
 
             foreach (Block b in emptyBlocks) outputRichTextBox.Document.Blocks.Remove(b);
@@ -97,24 +106,12 @@ namespace DeltaSql.ViewModels
 
             switch (e.Item1)
             {
-                case LogLevel.Debug:
-                    p.Inlines.Add(new Italic(new Run(e.Item2) { Foreground = Brushes.CornflowerBlue }));
-                    break;
-                case LogLevel.Error:
-                    p.Inlines.Add(new Bold(new Run(e.Item2) { Foreground = Brushes.Red }));
-                    break;
-                case LogLevel.Fatal:
-                    p.Inlines.Add(new Bold(new Italic(new Run(e.Item2) { Foreground = Brushes.DarkRed })));
-                    break;
-                case LogLevel.Info:
-                    p.Inlines.Add(new Run(e.Item2) { Foreground = Brushes.Black });
-                    break;
-                case LogLevel.Trace:
-                    p.Inlines.Add(new Italic(new Run(e.Item2) { Foreground = Brushes.SandyBrown }));
-                    break;
-                case LogLevel.Warning:
-                    p.Inlines.Add(new Bold(new Run(e.Item2) { Foreground = Brushes.Orange }));
-                    break;
+                case LogLevel.Debug: p.Inlines.Add(new Italic(new Run(e.Item2) { Foreground = Brushes.CornflowerBlue })); break;
+                case LogLevel.Error: p.Inlines.Add(new Bold(new Run(e.Item2) { Foreground = Brushes.Red })); break;
+                case LogLevel.Fatal: p.Inlines.Add(new Bold(new Italic(new Run(e.Item2) { Foreground = Brushes.DarkRed }))); break;
+                case LogLevel.Info: p.Inlines.Add(new Run(e.Item2) { Foreground = Brushes.Black }); break;
+                case LogLevel.Trace: p.Inlines.Add(new Italic(new Run(e.Item2) { Foreground = Brushes.SandyBrown })); break;
+                case LogLevel.Warning: p.Inlines.Add(new Bold(new Run(e.Item2) { Foreground = Brushes.Orange })); break;
             }
 
             outputRichTextBox.Document.Blocks.Add(p);

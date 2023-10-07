@@ -1,0 +1,196 @@
+﻿<UserControl x:Class="DeltaSql.UserControls.SqlInputUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DeltaSql.UserControls"
+             xmlns:viewModel="clr-namespace:DeltaSql.ViewModels"
+             xmlns:customControls="clr-namespace:WPF.CustomControls;assembly=WPF.CustomControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance Type={x:Type viewModel:SqlInputViewModel}}">
+    <Border BorderThickness="2" CornerRadius="5" Padding="5" Background="{DynamicResource DeltaSql.InternalDialog}"
+            BorderBrush="{DynamicResource DeltaSql.InternalDialog.Title}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <CheckBox Grid.Row="0" HorizontalAlignment="Right" IsChecked="{Binding ManualMode, Mode=TwoWay}"
+                      Content="{Binding Translations.ManualEntry, FallbackValue=Manual entry}" />
+            <Grid Grid.Row="1" Margin="0,10,0,0" Visibility="{Binding VisibilityManualEntry}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" TextWrapping="Wrap" Style="{StaticResource TextBlockForegroundStyle}">
+                    <Run FontSize="14" Text="{Binding Translations.ConnectionMessagePart2, FallbackValue=Specify the connection string for the database connection.}" />
+                    <LineBreak />
+                    <LineBreak />
+                    <Hyperlink Command="{Binding ConnectionStringCommand}">
+                        https://www.connectionstrings.com/sql-server/
+                    </Hyperlink>
+                </TextBlock>
+                <customControls:WatermarkTextBox Grid.Row="1" Margin="5,0"
+                                                 Watermark="{Binding Translations.ConnectionString, FallbackValue=Connection string}"
+                                                 Text="{Binding ConnectionString}" />
+                <Grid Grid.Row="2" Margin="0,5,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="8*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <WrapPanel Grid.Column="1" Orientation="Horizontal">
+                        <Button Margin="0,0,5,0" Padding="2,0" Content="{Binding Translations.Server, FallbackValue=Server}"
+                                Command="{Binding WordsServerCommand}" />
+                        <Button Margin="0,0,5,0" Padding="2,0" Content="{Binding Translations.InitialCatalog, FallbackValue=Initial Catalog}"
+                                Command="{Binding WordsInitialCatalogCommand}" />
+                        <Button Margin="0,0,5,0" Padding="2,0" Content="{Binding Translations.Username, FallbackValue=Username}" 
+                                Command="{Binding WordsUsernameCommand}" />
+                        <Button Margin="0,0,5,0" Padding="2,0" Content="{Binding Translations.Password, FallbackValue=Password}" 
+                                Command="{Binding WordsPasswordCommand}" />
+                        <Button Margin="0,0,5,0" Padding="2,0" Content="{Binding Translations.IntegratedSecurity, FallbackValue=Integrated Security}" 
+                                Command="{Binding WordsIntegratedSecurityCommand}" />
+                    </WrapPanel>
+                </Grid>
+            </Grid>
+            <Grid Grid.Row="1" Margin="0,10,0,0" Visibility="{Binding VisibilityInfoEntry}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" TextWrapping="Wrap" Style="{StaticResource TextBlockForegroundStyle}">
+                    <Run FontSize="14" Text="{Binding Translations.ConnectionMessagePart1, FallbackValue=Enter the information for the connection.}" />
+                </TextBlock>
+                <Grid Grid.Row="1" Margin="30,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="125" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Style="{StaticResource TextBlockForegroundStyle}" Text="{Binding Translations.Server, FallbackValue=Server}" />
+                    <customControls:WatermarkTextBox Grid.Column="1" Margin="5,0,0,0" Padding="5,0,0,0" Watermark="{Binding Translations.ServerWatermark, FallbackValue='server name[\\instance name[,port]]'}"
+                                                     Text="{Binding Server}" />
+                </Grid>
+                <Grid Grid.Row="2" Margin="30,5,30,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="125" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Style="{StaticResource TextBlockForegroundStyle}" Text="{Binding Translations.Database, FallbackValue=Database}" />
+                    <customControls:WatermarkTextBox Grid.Column="1" Margin="5,0,0,0" Padding="5,0,0,0" Watermark="{Binding Translations.DatabaseOptional, FallbackValue=database (optional)}"
+                                                     Text="{Binding Database}" />
+                </Grid>
+                <Grid Grid.Row="3" Margin="30,5,30,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="125" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Style="{StaticResource TextBlockForegroundStyle}" Text="{Binding Translations.Authentication, FallbackValue=Authentication}" />
+                    <ComboBox Grid.Column="1" Margin="5,0,0,0" SelectedIndex="{Binding SelectedAuthMode, FallbackValue=0}">
+                        <ComboBoxItem Content="{Binding Translations.AuthenticationWindows, FallbackValue=Windows Authentication}" />
+                        <ComboBoxItem Content="{Binding Translations.AuthenticationSql, FallbackValue=SQL Server Authentication}" />
+                    </ComboBox>
+                </Grid>
+                <Grid Grid.Row="4" Margin="50,5,30,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="125" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Style="{StaticResource TextBlockForegroundStyle}" Text="{Binding Translations.Username, FallbackValue=Username}" />
+                    <customControls:WatermarkTextBox Grid.Column="1" Margin="5,0,0,0" Padding="5,0,0,0" Watermark="{Binding Translations.UsernameLowercase, FallbackValue=username}"
+                                                     Text="{Binding Username}" />
+                    <Grid.Style>
+                        <Style TargetType="Grid">
+                            <Setter Property="IsEnabled" Value="True" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedAuthMode}" Value="0">
+                                    <Setter Property="IsEnabled" Value="False" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+                </Grid>
+                <Grid Grid.Row="5" Margin="50,5,30,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="125" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Style="{StaticResource TextBlockForegroundStyle}" Text="{Binding Translations.Password, FallbackValue=Password}" />
+                    <customControls:WatermarkTextBox Grid.Column="1" Margin="5,0,0,0" Padding="5,0,0,0" Watermark="{Binding Translations.PasswordLowercase, FallbackValue=password}"
+                                                     Text="{Binding Password}" />
+                    <Grid.Style>
+                        <Style TargetType="Grid">
+                            <Setter Property="IsEnabled" Value="True" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedAuthMode}" Value="0">
+                                    <Setter Property="IsEnabled" Value="False" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+                </Grid>
+            </Grid>
+            <TextBlock Grid.Row="2" Margin="0,10,0,0" TextWrapping="Wrap" VerticalAlignment="Bottom" FontSize="10"
+                           Style="{StaticResource TextBlockForegroundStyle}">
+                    <Run FontStyle="Italic" Text="{Binding Translations.ConnectionMessagePart3, FallbackValue=Connection type on the left must match the connection type on the right.}" />
+            </TextBlock>
+            <Border Grid.Row="3" Background="{DynamicResource DeltaSql.GridSplitter}" Height="3" Margin="0,10">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Visibility" Value="Visible" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding PreviousConnections.Count}" Value="0">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+            </Border>
+            <Grid Grid.Row="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Padding="0,1,0,0" Style="{StaticResource TextBlockForegroundStyle}" 
+                           Text="{Binding Translations.PreviousConnections, FallbackValue=Previous connections}" />
+                <ComboBox Grid.Column="1" Margin="5,0,0,0"
+                          ItemsSource="{Binding PreviousConnections}" />
+                <Grid.Style>
+                    <Style TargetType="Grid">
+                        <Setter Property="Visibility" Value="Visible" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding PreviousConnections.Count}" Value="0">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+            </Grid>
+            <Border Grid.Row="5" Background="{DynamicResource DeltaSql.GridSplitter}" Height="3" Margin="0,10" />
+            <Grid Grid.Row="6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="1" BorderThickness="0" Padding="2" ToolTip="{Binding Translations.Connect, FallbackValue=Connect}"
+                        Style="{StaticResource ConnectButtonStyle}" Content="{StaticResource Connect}" />
+                <Button Grid.Column="2" Background="Transparent" BorderThickness="0" Padding="2" Margin="5,0,0,0" 
+                        ToolTip="{Binding Translations.ClearData, FallbackValue=Clear data}"
+                        Content="{StaticResource Clear}" />
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>

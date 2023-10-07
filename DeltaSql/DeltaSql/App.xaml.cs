@@ -1,4 +1,5 @@
-﻿using DeltaSql.Properties;
+﻿using DeltaSql.Cryptography;
+using DeltaSql.Properties;
 using DeltaSql.Services;
 using DeltaSql.Theming;
 using DeltaSql.ViewModels;
@@ -21,6 +22,7 @@ namespace DeltaSql
         {
             #region Service Initialization
 
+            ServiceLocator.Instance.Cryptographer = new SimpleCryptographer();
             ServiceLocator.Instance.LoggingService = new LoggingService(new Logger());
             ServiceLocator.Instance.ThemingService = new ThemingService();
 
@@ -58,7 +60,9 @@ namespace DeltaSql
             MainWindowViewModel mainWindowViewModel = new MainWindowViewModel
             {
                 MessageBoxViewModel = new MessageBoxViewModel(),
-                ProgressViewModel = new ProgressViewModel()
+                ProgressViewModel = new ProgressViewModel(),
+                SqlInputViewModelLeft = new SqlInputViewModel(),
+                SqlInputViewModelRight = new SqlInputViewModel()
             };
             ServiceLocator.Instance.LoggingService.LogEntry += mainWindowViewModel.LoggingService_LogEntry;
 

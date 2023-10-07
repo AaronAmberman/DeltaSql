@@ -58,5 +58,16 @@ namespace DeltaSql.Properties {
                 this["Theme"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Specialized.StringCollection PreviousConnections {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["PreviousConnections"]));
+            }
+            set {
+                this["PreviousConnections"] = value;
+            }
+        }
     }
 }

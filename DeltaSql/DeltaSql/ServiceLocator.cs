@@ -1,4 +1,5 @@
-﻿using DeltaSql.Services;
+﻿using DeltaSql.Cryptography;
+using DeltaSql.Services;
 using DeltaSql.ViewModels;
 
 namespace DeltaSql
@@ -25,6 +26,8 @@ namespace DeltaSql
                 }
             }
         }
+
+        public SimpleCryptographer Cryptographer { get; set; }
 
         public LoggingService LoggingService { get; set; }
 
