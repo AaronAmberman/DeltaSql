@@ -1,4 +1,4 @@
-﻿using System;
+﻿using DeltaSql.Enums;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
@@ -14,15 +14,19 @@ namespace DeltaSql.ViewModels
         private ICommand clearCommand;
         private ICommand connectCommand;
         private ICommand connectionStringCommand;
-        private string connectionString;
-        private string database;
+        private string connectionString = string.Empty;
+        private string database = string.Empty;
+        private AcceptanceState infoEntryAcceptanceState;
+        private string infoEntryWarningError = string.Empty;
+        private AcceptanceState manualEntryAcceptanceState;
+        private string manualEntryWarningError = string.Empty;
         private bool manualMode;
-        private string password;
+        private string password = string.Empty;
         private ObservableCollection<string> previousConnections = new ObservableCollection<string>();
         private int selectedAuthMode;
-        private string server;
+        private string server = string.Empty;
         private Translation translations;
-        private string username;
+        private string username = string.Empty;
         private Visibility visibility = Visibility.Visible;
         private Visibility visibilityInfoEntry = Visibility.Visible;
         private Visibility visibilityManualEntry = Visibility.Collapsed;
@@ -58,6 +62,46 @@ namespace DeltaSql.ViewModels
             set
             {
                 database = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public AcceptanceState InfoEntryAcceptanceState
+        {
+            get => infoEntryAcceptanceState;
+            set
+            {
+                infoEntryAcceptanceState = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string InfoEntryWarningError
+        {
+            get => infoEntryWarningError;
+            set
+            {
+                infoEntryWarningError = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public AcceptanceState ManualEntryAcceptanceState
+        {
+            get => manualEntryAcceptanceState;
+            set
+            {
+                manualEntryAcceptanceState = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string ManualEntryWarningError
+        {
+            get => manualEntryWarningError;
+            set
+            {
+                manualEntryWarningError = value;
                 OnPropertyChanged();
             }
         }
@@ -190,12 +234,24 @@ namespace DeltaSql.ViewModels
 
         private bool CanConnect()
         {
-            return false;
+            return !string.IsNullOrWhiteSpace(ConnectionString);
         }
 
         private void Clear()
         {
+            ConnectionString = string.Empty;
+            Database = string.Empty;
+            InfoEntryWarningError = string.Empty;
+            ManualEntryWarningError = string.Empty;
+            Password = string.Empty;
+            Server = string.Empty;
+            Username = string.Empty;
+        }
 
+        private void ClearManualStatus()
+        {
+            ManualEntryAcceptanceState = AcceptanceState.None;
+            ManualEntryWarningError = string.Empty;
         }
 
         private void Connect()
@@ -208,29 +264,42 @@ namespace DeltaSql.ViewModels
             Process.Start(new ProcessStartInfo("https://www.connectionstrings.com/sql-server/") { UseShellExecute = true });
         }
 
-        private void WordsServer()
-        {
-            
-        }
-
         private void WordsInitialCatalog()
         {
-            
-        }
-
-        private void WordsUsername()
-        {
-            
-        }
-
-        private void WordsPassword()
-        {
-            
+            WordsX("Initial Catalog="); // does this need to be translated?
         }
 
         private void WordsIntegratedSecurity()
         {
-            
+            WordsX("Integrated Security="); // does this need to be translated?
+        }
+
+        private void WordsPassword()
+        {
+            WordsX("Password="); // does this need to be translated?
+        }
+
+        private void WordsServer()
+        {
+            WordsX("Server="); // does this need to be translated?
+        }
+
+        private void WordsUsername()
+        {
+            WordsX("User Id="); // does this need to be translated?
+        }
+
+        private void WordsX(string parameter)
+        {
+            ClearManualStatus();
+
+            if (ConnectionString.Contains(parameter))
+            {
+                ManualEntryWarningError = string.Format(ServiceLocator.Instance.MainWindowViewModel.Translations.ConnectionStringContainsParameter, parameter.Substring(0, parameter.Length - 1));
+                ManualEntryAcceptanceState = AcceptanceState.Error;
+            }
+            else
+                ConnectionString += $"{parameter};";
         }
 
         #endregion

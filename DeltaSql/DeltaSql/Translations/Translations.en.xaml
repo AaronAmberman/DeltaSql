@@ -18,6 +18,7 @@
     <sys:String x:Key="ConnectionMessagePart2">Specify the connection string for the server or database. For help see...</sys:String>
     <sys:String x:Key="ConnectionMessagePart3">Connection type on the left must match the connection type on the right. Meaning if there is a database connection on the left then there must be a database connection on the right. Same with a server connection.</sys:String>
     <sys:String x:Key="ConnectionString">Connection string</sys:String>
+    <sys:String x:Key="ConnectionStringContainsParameter">The connection string already contains the '{0}' parameter.</sys:String>
     <sys:String x:Key="Dark">Dark</sys:String>
     <sys:String x:Key="Database">Database</sys:String>
     <sys:String x:Key="DatabaseOptional">database (optional)</sys:String>

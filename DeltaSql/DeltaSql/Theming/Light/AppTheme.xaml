@@ -6,8 +6,12 @@
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                     xmlns:options="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
                     mc:Ignorable="options">
+    <!-- 
+        Colors
+    -->
     <Color x:Key="DeltaSql.Border.Color">#FF000000</Color>
     <Color x:Key="DeltaSql.ConnectButton.Background.Color">#FF1C851B</Color>
+    <Color x:Key="DeltaSql.ConnectButton.Disabled.Background.Color">#FF004400</Color>
     <Color x:Key="DeltaSql.ConnectButton.MouseOver.Background.Color">#FF229E21</Color>
     <Color x:Key="DeltaSql.ConnectButton.Pressed.Background.Color">#FF187517</Color>
     <Color x:Key="DeltaSql.Foreground.Color">#FF000000</Color>
@@ -25,9 +29,22 @@
     <Color x:Key="DeltaSql.ProgressBox.Background.Color">#FFDDDDDD</Color>
     <Color x:Key="DeltaSql.ProgressBox.Foreground.Color">#FF000000</Color>
     <Color x:Key="DeltaSql.ProgressBox.Title.Background.Color">#FFBBBBBB</Color>
+    <Color x:Key="DeltaSql.Status.Accepted.Background.Color">#FF1C851B</Color>
+    <Color x:Key="DeltaSql.Status.Accepted.Border.Color">#FF169C40</Color>
+    <Color x:Key="DeltaSql.Status.Accepted.Foreground.Color">#FF0B4D20</Color>
+    <Color x:Key="DeltaSql.Status.Error.Background.Color">#FFDD0000</Color>
+    <Color x:Key="DeltaSql.Status.Error.Border.Color">#FFFF3333</Color>
+    <Color x:Key="DeltaSql.Status.Error.Foreground.Color">#FF7B0000</Color>
+    <Color x:Key="DeltaSql.Status.Warning.Background.Color">#FFFFA500</Color>
+    <Color x:Key="DeltaSql.Status.Warning.Border.Color">#FFFFA566</Color>
+    <Color x:Key="DeltaSql.Status.Warning.Foreground.Color">#FFBB5000</Color>
 
+    <!-- 
+        Brushes
+    -->
     <SolidColorBrush x:Key="DeltaSql.Border" Color="{DynamicResource DeltaSql.Border.Color}" options:Freeze="True"/>
     <SolidColorBrush x:Key="DeltaSql.ConnectButton.Background" Color="{DynamicResource DeltaSql.ConnectButton.Background.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="DeltaSql.ConnectButton.Disabled.Background" Color="{DynamicResource DeltaSql.ConnectButton.Disabled.Background.Color}" options:Freeze="True"/>
     <SolidColorBrush x:Key="DeltaSql.ConnectButton.MouseOver.Background" Color="{DynamicResource DeltaSql.ConnectButton.MouseOver.Background.Color}" options:Freeze="True"/>
     <SolidColorBrush x:Key="DeltaSql.ConnectButton.Pressed.Background" Color="{DynamicResource DeltaSql.ConnectButton.Pressed.Background.Color}" options:Freeze="True"/>
     <SolidColorBrush x:Key="DeltaSql.Foreground" Color="{DynamicResource DeltaSql.Foreground.Color}" options:Freeze="True"/>
@@ -45,10 +62,31 @@
     <SolidColorBrush x:Key="DeltaSql.ProgressBox.Background" Color="{DynamicResource DeltaSql.ProgressBox.Background.Color}" options:Freeze="True"/>
     <SolidColorBrush x:Key="DeltaSql.ProgressBox.Foreground" Color="{DynamicResource DeltaSql.ProgressBox.Foreground.Color}" options:Freeze="True"/>
     <SolidColorBrush x:Key="DeltaSql.ProgressBox.Title.Background" Color="{DynamicResource DeltaSql.ProgressBox.Title.Background.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="DeltaSql.Status.Accepted.Background" Color="{DynamicResource DeltaSql.Status.Accepted.Background.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="DeltaSql.Status.Accepted.Border" Color="{DynamicResource DeltaSql.Status.Accepted.Border.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="DeltaSql.Status.Accepted.Foreground" Color="{DynamicResource DeltaSql.Status.Accepted.Foreground.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="DeltaSql.Status.Error.Background" Color="{DynamicResource DeltaSql.Status.Error.Background.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="DeltaSql.Status.Error.Border" Color="{DynamicResource DeltaSql.Status.Error.Border.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="DeltaSql.Status.Error.Foreground" Color="{DynamicResource DeltaSql.Status.Error.Foreground.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="DeltaSql.Status.Warning.Background" Color="{DynamicResource DeltaSql.Status.Warning.Background.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="DeltaSql.Status.Warning.Border" Color="{DynamicResource DeltaSql.Status.Warning.Border.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="DeltaSql.Status.Warning.Foreground" Color="{DynamicResource DeltaSql.Status.Warning.Foreground.Color}" options:Freeze="True"/>
 
+    <!-- 
+        Styles
+    -->
+    <!-- Grids -->
     <Style x:Key="GridStyle" TargetType="Grid">
         <Setter Property="Background" Value="{DynamicResource DeltaSql.Grid}" />
     </Style>
+
+    <!-- Borders -->
+    <Style x:Key="BorderStyle" TargetType="Border">
+        <Setter Property="BorderBrush" Value="{DynamicResource DeltaSql.Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+
+    <!-- TextBlocks -->
     <Style x:Key="TextBlockForegroundStyle" TargetType="TextBlock">
         <Setter Property="Foreground" Value="{DynamicResource DeltaSql.Foreground}" />
         <Style.Triggers>
@@ -57,10 +95,10 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    <Style x:Key="BorderStyle" TargetType="Border">
-        <Setter Property="BorderBrush" Value="{DynamicResource DeltaSql.Border}" />
-        <Setter Property="BorderThickness" Value="1" />
-    </Style>
+
+    <!-- 
+        Template Overrides
+    -->
     <Style x:Key="ConnectButtonStyle" TargetType="{x:Type Button}">
         <Setter Property="FocusVisualStyle" Value="{DynamicResource FocusVisual}"/>
         <Setter Property="Background" Value="{DynamicResource DeltaSql.ConnectButton.Background}"/>
@@ -92,6 +130,7 @@
                             <Setter Property="Background" TargetName="border" Value="{DynamicResource Button.Disabled.Background}"/>
                             <!--<Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource Button.Disabled.Border}"/>-->
                             <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{DynamicResource DeltaSql.Foreground.Disabled}"/>
+                            <Setter Property="Opacity" Value="0.9" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

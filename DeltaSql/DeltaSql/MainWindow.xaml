@@ -31,9 +31,9 @@
                 </Grid>
                 <Grid Grid.Row="1" Margin="0,5">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" MinWidth="50" />
+                        <ColumnDefinition Width="*" MinWidth="200" />
                         <ColumnDefinition Width="3" />
-                        <ColumnDefinition Width="*" MinWidth="50" />
+                        <ColumnDefinition Width="*" MinWidth="200" />
                     </Grid.ColumnDefinitions>
                     <Grid x:Name="inputOneGrid" Grid.Column="0" Margin="0,0,5,0">
                         <TabControl Margin="0,2,0,0">
