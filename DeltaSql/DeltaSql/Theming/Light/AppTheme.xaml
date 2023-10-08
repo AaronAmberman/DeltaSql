@@ -38,6 +38,7 @@
     <Color x:Key="DeltaSql.Status.Warning.Background.Color">#FFFFA500</Color>
     <Color x:Key="DeltaSql.Status.Warning.Border.Color">#FFFFA566</Color>
     <Color x:Key="DeltaSql.Status.Warning.Foreground.Color">#FFBB5000</Color>
+    <Color x:Key="DeltaSql.Watermark.Foreground.Color">#FF808080</Color>
 
     <!-- 
         Brushes
@@ -71,6 +72,7 @@
     <SolidColorBrush x:Key="DeltaSql.Status.Warning.Background" Color="{DynamicResource DeltaSql.Status.Warning.Background.Color}" options:Freeze="True"/>
     <SolidColorBrush x:Key="DeltaSql.Status.Warning.Border" Color="{DynamicResource DeltaSql.Status.Warning.Border.Color}" options:Freeze="True"/>
     <SolidColorBrush x:Key="DeltaSql.Status.Warning.Foreground" Color="{DynamicResource DeltaSql.Status.Warning.Foreground.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="DeltaSql.Watermark.Foreground" Color="{DynamicResource DeltaSql.Watermark.Foreground.Color}" options:Freeze="True"/>
 
     <!-- 
         Styles

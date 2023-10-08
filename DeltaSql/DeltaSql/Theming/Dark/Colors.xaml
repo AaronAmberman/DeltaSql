@@ -3,7 +3,7 @@
     <!-- 
         Custom Controls 
     -->
-    <Color x:Key="HighlightRoundableToggleButton.IsChecked.Border.Color">#FF505050</Color>
+    <Color x:Key="RoundableToggleButtonStyle.IsChecked.Border.Color">#FF505050</Color>
 
     <!-- 
         WPF Controls
@@ -21,8 +21,10 @@
     <Color x:Key="Button.MouseOver.Border.Color">#FFAAAAAA</Color>
     <Color x:Key="Button.Pressed.Background.Color">#770F0F0F</Color>
     <Color x:Key="Button.Pressed.Border.Color">#55AAAAAA</Color>
-    <Color x:Key="Button.Disabled.Background.Color">#773D3D3D</Color>
-    <Color x:Key="Button.Disabled.Border.Color">#FF3D3D3D</Color>
+    <!--<Color x:Key="Button.Disabled.Background.Color">#773D3D3D</Color>-->
+    <Color x:Key="Button.Disabled.Background.Color">#775C5C5C</Color>
+    <!--<Color x:Key="Button.Disabled.Border.Color">#FF3D3D3D</Color>-->
+    <Color x:Key="Button.Disabled.Border.Color">#FF707070</Color>
     <Color x:Key="Button.Disabled.Foreground.Color">#FF7D7D7D</Color>
 
     <Color x:Key="Calendar.Background.GradientStop1.Color">#FF222222</Color>

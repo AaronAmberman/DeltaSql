@@ -9,6 +9,13 @@
              DispatcherUnhandledException="Application_DispatcherUnhandledException">
     <Application.Resources>
         <ResourceDictionary>
+            <converters:ArithmeticConverter x:Key="ArithmeticConverter" />
+            <converters:EqualsConverter x:Key="EqualsConverter" />
+            <converters:EqualsMultiConverter x:Key="EqualsMultiConverter" />
+            <converters:NotEqualsConverter x:Key="NotEqualsConverter" />
+            <converters:NotEqualsMultiConverter x:Key="NotEqualsMultiConverter" />
+            <converters:ThicknessConverter x:Key="ThicknessConverter" />
+
             <ResourceDictionary.MergedDictionaries>
                 <theme:ThemeDictionary Source="pack://application:,,,/Theming/Dark/Colors.xaml"
                                        DarkSource="pack://application:,,,/Theming/Dark/Colors.xaml"
@@ -29,15 +36,9 @@
                 <theme:ThemeDictionary Source="pack://application:,,,/Theming/Dark/AppTheme.xaml"
                                        DarkSource="pack://application:,,,/Theming/Dark/AppTheme.xaml"
                                        LightSource="pack://application:,,,/Theming/Light/AppTheme.xaml" />
-                
+
                 <ResourceDictionary Source="pack://application:,,,/WpfImagery.xaml" />
             </ResourceDictionary.MergedDictionaries>
-
-            <converters:ArithmeticConverter x:Key="ArithmeticConverter" />
-            <converters:EqualsConverter x:Key="EqualsConverter" />
-            <converters:EqualsMultiConverter x:Key="EqualsMultiConverter" />
-            <converters:NotEqualsConverter x:Key="NotEqualsConverter" />
-            <converters:NotEqualsMultiConverter x:Key="NotEqualsMultiConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -3,7 +3,7 @@
     <!-- 
         Custom Controls 
     -->
-    <Color x:Key="HighlightRoundableToggleButton.IsChecked.Border.Color">#FF505050</Color>
+    <Color x:Key="RoundableToggleButtonStyle.IsChecked.Border.Color">#FF505050</Color>
 
     <!-- 
         WPF Controls

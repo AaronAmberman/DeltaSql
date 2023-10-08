@@ -1,5 +1,6 @@
 ﻿using DeltaSql.Enums;
 using System.Collections.ObjectModel;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
@@ -234,9 +235,25 @@ namespace DeltaSql.ViewModels
 
         private bool CanConnect()
         {
-            return !string.IsNullOrWhiteSpace(ConnectionString) && 
-                ((ConnectionString.Contains("Server=") && ConnectionString.Contains("User Id=") && ConnectionString.Contains("Password=")) ||
-                (ConnectionString.Contains("Server=") && ConnectionString.Contains("Integrated Security=")));
+            if (ManualMode)
+            {
+                return !string.IsNullOrWhiteSpace(ConnectionString) &&
+                    ((ConnectionString.Contains("Server=") && ConnectionString.Contains("User Id=") && ConnectionString.Contains("Password=")) ||
+                    (ConnectionString.Contains("Server=") && ConnectionString.Contains("Integrated Security=")));
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(Server))
+                    return false;
+
+                if (SelectedAuthMode == 1) // SQL auth
+                {
+                    if (string.IsNullOrWhiteSpace(Username)) return false;
+                    if (string.IsNullOrWhiteSpace(Password)) return false;
+                }
+
+                return true;
+            }
         }
 
         private void Clear()
@@ -252,6 +269,12 @@ namespace DeltaSql.ViewModels
             Username = string.Empty;
         }
 
+        private void ClearInfoStatus()
+        {
+            InfoEntryAcceptanceState = AcceptanceState.None;
+            InfoEntryWarningError = string.Empty;
+        }
+
         private void ClearManualStatus()
         {
             ManualEntryAcceptanceState = AcceptanceState.None;
@@ -260,12 +283,80 @@ namespace DeltaSql.ViewModels
 
         private void Connect()
         {
-            
+            ClearInfoStatus();
+            ClearManualStatus();
+
+            if (!VerifyConnectionString()) return;
+
+            SqlConnectionStringBuilder sqlConnectionStringBuilder = new SqlConnectionStringBuilder(ConnectionString);
+
+            if (!string.IsNullOrWhiteSpace(sqlConnectionStringBuilder.InitialCatalog))
+            {
+                ServiceLocator.Instance.LoggingService.Debug(
+                    string.Format(ServiceLocator.Instance.MainWindowViewModel.Translations.AttemptingDatabaseConnection, 
+                        sqlConnectionStringBuilder.InitialCatalog));
+            }
+            else
+            {
+                ServiceLocator.Instance.LoggingService.Debug(
+                    string.Format(ServiceLocator.Instance.MainWindowViewModel.Translations.AttemptingServerConnection, 
+                        sqlConnectionStringBuilder.DataSource));
+            }
         }
 
         private void ConnectionStringsCom()
         {
             Process.Start(new ProcessStartInfo("https://www.connectionstrings.com/sql-server/") { UseShellExecute = true });
+        }
+
+        private bool VerifyConnectionString()
+        {
+            if (!ManualMode)
+            {
+                string temp = $"Server={Server};";
+
+                if (!string.IsNullOrWhiteSpace(Database))
+                    temp += $"Initial Catalog={Database};";
+
+                if (SelectedAuthMode == 0) // Windows auth
+                {
+                    temp += "Integrated Security=True;";
+                }
+                else if (SelectedAuthMode == 1) // SQL auth
+                {
+                    temp += $"User Id={Username};Password={Password};";
+                }
+
+                ConnectionString = temp;
+            }
+
+            SqlConnectionStringBuilder sqlConnectionStringBuilder = new SqlConnectionStringBuilder(ConnectionString);
+
+            if (string.IsNullOrWhiteSpace(sqlConnectionStringBuilder.DataSource))
+            {
+                WriteStringToAppropriateSqlInputStatus(ServiceLocator.Instance.MainWindowViewModel.Translations.MissingServerName, AcceptanceState.Error);
+
+                return false;
+            }
+
+            if (!sqlConnectionStringBuilder.IntegratedSecurity) // means SQL auth
+            {
+                if (string.IsNullOrWhiteSpace(sqlConnectionStringBuilder.UserID))
+                {
+                    WriteStringToAppropriateSqlInputStatus(ServiceLocator.Instance.MainWindowViewModel.Translations.MissingUsername, AcceptanceState.Error);
+
+                    return false;
+                }
+
+                if (string.IsNullOrWhiteSpace(sqlConnectionStringBuilder.Password))
+                {
+                    WriteStringToAppropriateSqlInputStatus(ServiceLocator.Instance.MainWindowViewModel.Translations.MissingPassword, AcceptanceState.Error);
+
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         private void WordsInitialCatalog()
@@ -276,8 +367,6 @@ namespace DeltaSql.ViewModels
         private void WordsIntegratedSecurity()
         {
             WordsX("Integrated Security=True"); // does this need to be translated?
-
-            //ConnectionString = ConnectionString.Replace("Integrated Security=;", "Integrated Security=True;"); // does this need to be translated?
         }
 
         private void WordsPassword()
@@ -307,6 +396,20 @@ namespace DeltaSql.ViewModels
                 ManualEntryAcceptanceState = AcceptanceState.Error;
             }
             else ConnectionString += $"{parameter};";
+        }
+
+        private void WriteStringToAppropriateSqlInputStatus(string message, AcceptanceState acceptanceState)
+        {
+            if (ManualMode)
+            {
+                ManualEntryAcceptanceState = acceptanceState;
+                ManualEntryWarningError = message;
+            }
+            else
+            {
+                InfoEntryAcceptanceState = acceptanceState;
+                InfoEntryWarningError = message;
+            }
         }
 
         #endregion

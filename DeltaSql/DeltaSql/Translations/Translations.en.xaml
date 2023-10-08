@@ -3,6 +3,8 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
     <sys:String x:Key="About">About</sys:String>
     <sys:String x:Key="AboutAppMessage">This application can help compare the differences between Microsoft SQL Server instances.</sys:String>
+    <sys:String x:Key="AttemptingDatabaseConnection">Attempting to connect to MS SQL database '{0}'.</sys:String>
+    <sys:String x:Key="AttemptingServerConnection">Attempting to connect to MS SQL server '{0}'.</sys:String>
     <sys:String x:Key="Authentication">Authentication</sys:String>
     <sys:String x:Key="AuthenticationSql">SQL Server Authentication</sys:String>
     <sys:String x:Key="AuthenticationWindows">Windows Authentication</sys:String>
@@ -42,6 +44,9 @@
     <sys:String x:Key="LogWriteErrorTitle">Log Write Error</sys:String>
     <sys:String x:Key="MainWindowTitle">Delta SQL</sys:String>
     <sys:String x:Key="ManualEntry">Manual entry</sys:String>
+    <sys:String x:Key="MissingPassword">There must be a password for the connection string. Please make sure the 'Password' parameter is assigned and that it is not empty.</sys:String>
+    <sys:String x:Key="MissingServerName">There must be a server name for the connection string. Please make sure the 'Server' parameter is assigned and that it is not empty.</sys:String>
+    <sys:String x:Key="MissingUsername">There must be a username for the connection string. Please make sure the 'User Id' parameter is assigned and that it is not empty.</sys:String>
     <sys:String x:Key="Name">Name</sys:String>
     <sys:String x:Key="No">No</sys:String>
     <sys:String x:Key="Norwegian">Norsk</sys:String>

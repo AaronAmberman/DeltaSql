@@ -6,7 +6,7 @@
     <!-- 
         Custom Controls 
     -->
-    <SolidColorBrush x:Key="HighlightRoundableToggleButton.IsChecked.Border" Color="{DynamicResource HighlightRoundableToggleButton.IsChecked.Border.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="RoundableToggleButtonStyle.IsChecked.Border" Color="{DynamicResource RoundableToggleButtonStyle.IsChecked.Border.Color}" options:Freeze="True"/>
     
     <!-- 
         WPF Controls
