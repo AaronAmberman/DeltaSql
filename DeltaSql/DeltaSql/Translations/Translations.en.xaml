@@ -59,6 +59,7 @@
     <sys:String x:Key="TheLowercase">the</sys:String>
     <sys:String x:Key="UnhandledErrorMessage">An unhandled exception occurred in the application. We have logged it. Please see log for further details.</sys:String>
     <sys:String x:Key="UnhandledErrorTitle">Unhandled Error</sys:String>
+    <sys:String x:Key="UserId">User Id</sys:String>
     <sys:String x:Key="Username">Username</sys:String>
     <sys:String x:Key="UsernameLowercase">username</sys:String>
     <sys:String x:Key="Version">Version</sys:String>

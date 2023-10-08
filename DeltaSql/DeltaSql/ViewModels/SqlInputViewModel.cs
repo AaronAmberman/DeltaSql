@@ -234,14 +234,18 @@ namespace DeltaSql.ViewModels
 
         private bool CanConnect()
         {
-            return !string.IsNullOrWhiteSpace(ConnectionString);
+            return !string.IsNullOrWhiteSpace(ConnectionString) && 
+                ((ConnectionString.Contains("Server=") && ConnectionString.Contains("User Id=") && ConnectionString.Contains("Password=")) ||
+                (ConnectionString.Contains("Server=") && ConnectionString.Contains("Integrated Security=")));
         }
 
         private void Clear()
         {
             ConnectionString = string.Empty;
             Database = string.Empty;
+            InfoEntryAcceptanceState = AcceptanceState.None;
             InfoEntryWarningError = string.Empty;
+            ManualEntryAcceptanceState = AcceptanceState.None;
             ManualEntryWarningError = string.Empty;
             Password = string.Empty;
             Server = string.Empty;
@@ -271,7 +275,9 @@ namespace DeltaSql.ViewModels
 
         private void WordsIntegratedSecurity()
         {
-            WordsX("Integrated Security="); // does this need to be translated?
+            WordsX("Integrated Security=True"); // does this need to be translated?
+
+            //ConnectionString = ConnectionString.Replace("Integrated Security=;", "Integrated Security=True;"); // does this need to be translated?
         }
 
         private void WordsPassword()
@@ -293,13 +299,14 @@ namespace DeltaSql.ViewModels
         {
             ClearManualStatus();
 
-            if (ConnectionString.Contains(parameter))
+            string temp = parameter.Substring(0, parameter.IndexOf("=") + 1);
+
+            if (ConnectionString.Contains(temp))
             {
-                ManualEntryWarningError = string.Format(ServiceLocator.Instance.MainWindowViewModel.Translations.ConnectionStringContainsParameter, parameter.Substring(0, parameter.Length - 1));
+                ManualEntryWarningError = string.Format(ServiceLocator.Instance.MainWindowViewModel.Translations.ConnectionStringContainsParameter, temp.Substring(0, temp.Length - 1));
                 ManualEntryAcceptanceState = AcceptanceState.Error;
             }
-            else
-                ConnectionString += $"{parameter};";
+            else ConnectionString += $"{parameter};";
         }
 
         #endregion
