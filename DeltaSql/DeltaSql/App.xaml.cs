@@ -64,9 +64,13 @@ namespace DeltaSql
                 SqlInputViewModelLeft = new SqlInputViewModel(),
                 SqlInputViewModelRight = new SqlInputViewModel()
             };
-            ServiceLocator.Instance.LoggingService.LogEntry += mainWindowViewModel.LoggingService_LogEntry;
+            mainWindowViewModel.SqlInputViewModelLeft.Connected += mainWindowViewModel.SqlInputViewModel_Connected;
+            mainWindowViewModel.SqlInputViewModelLeft.Connecting += mainWindowViewModel.SqlInputViewModel_Connecting;
+            mainWindowViewModel.SqlInputViewModelRight.Connected += mainWindowViewModel.SqlInputViewModel_Connected;
+            mainWindowViewModel.SqlInputViewModelRight.Connecting += mainWindowViewModel.SqlInputViewModel_Connecting;
 
             ServiceLocator.Instance.MainWindowViewModel = mainWindowViewModel;
+            ServiceLocator.Instance.LoggingService.LogEntry += mainWindowViewModel.LoggingService_LogEntry;
 
             #endregion
 

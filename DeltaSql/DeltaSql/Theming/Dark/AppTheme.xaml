@@ -29,6 +29,11 @@
     <Color x:Key="DeltaSql.ProgressBox.Background.Color">#FF2F2F2F</Color>
     <Color x:Key="DeltaSql.ProgressBox.Foreground.Color">#FFFFFFFF</Color>
     <Color x:Key="DeltaSql.ProgressBox.Title.Background.Color">#FF2F2F2F</Color>
+    <Color x:Key="DeltaSql.SqlInput.ConnectionStatus.NotConnected.Color">#FFFFFFFF</Color>
+    <Color x:Key="DeltaSql.SqlInput.ConnectionStatus.DatabaseConnected.Color">#FF3456FF</Color>
+    <Color x:Key="DeltaSql.SqlInput.ConnectionStatus.DatabaseConnectionRequired.Color">#FF5678FF</Color>
+    <Color x:Key="DeltaSql.SqlInput.ConnectionStatus.ServerConnected.Color">#FFAA3467</Color>
+    <Color x:Key="DeltaSql.SqlInput.ConnectionStatus.ServerConnectionRequired.Color">#FFCC5467</Color>
     <Color x:Key="DeltaSql.Status.Accepted.Background.Color">#FF0B4D20</Color>
     <Color x:Key="DeltaSql.Status.Accepted.Border.Color">#FF169C40</Color>
     <Color x:Key="DeltaSql.Status.Accepted.Foreground.Color">#FF1C851B</Color>
@@ -63,6 +68,11 @@
     <SolidColorBrush x:Key="DeltaSql.ProgressBox.Background" Color="{DynamicResource DeltaSql.ProgressBox.Background.Color}" options:Freeze="True"/>
     <SolidColorBrush x:Key="DeltaSql.ProgressBox.Foreground" Color="{DynamicResource DeltaSql.ProgressBox.Foreground.Color}" options:Freeze="True"/>
     <SolidColorBrush x:Key="DeltaSql.ProgressBox.Title.Background" Color="{DynamicResource DeltaSql.ProgressBox.Title.Background.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="DeltaSql.SqlInput.ConnectionStatus.NotConnected" Color="{DynamicResource DeltaSql.SqlInput.ConnectionStatus.NotConnected.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="DeltaSql.SqlInput.ConnectionStatus.DatabaseConnected" Color="{DynamicResource DeltaSql.SqlInput.ConnectionStatus.DatabaseConnected.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="DeltaSql.SqlInput.ConnectionStatus.DatabaseConnectionRequired" Color="{DynamicResource DeltaSql.SqlInput.ConnectionStatus.DatabaseConnectionRequired.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="DeltaSql.SqlInput.ConnectionStatus.ServerConnected" Color="{DynamicResource DeltaSql.SqlInput.ConnectionStatus.ServerConnected.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="DeltaSql.SqlInput.ConnectionStatus.ServerConnectionRequired" Color="{DynamicResource DeltaSql.SqlInput.ConnectionStatus.ServerConnectionRequired.Color}" options:Freeze="True"/>
     <SolidColorBrush x:Key="DeltaSql.Status.Accepted.Background" Color="{DynamicResource DeltaSql.Status.Accepted.Background.Color}" options:Freeze="True"/>
     <SolidColorBrush x:Key="DeltaSql.Status.Accepted.Border" Color="{DynamicResource DeltaSql.Status.Accepted.Border.Color}" options:Freeze="True"/>
     <SolidColorBrush x:Key="DeltaSql.Status.Accepted.Foreground" Color="{DynamicResource DeltaSql.Status.Accepted.Foreground.Color}" options:Freeze="True"/>
@@ -101,6 +111,7 @@
     <!-- 
         Template Overrides
     -->
+    <!-- Buttons -->
     <Style x:Key="ConnectButtonStyle" TargetType="{x:Type Button}">
         <Setter Property="FocusVisualStyle" Value="{DynamicResource FocusVisual}"/>
         <Setter Property="Background" Value="{DynamicResource DeltaSql.ConnectButton.Background}"/>

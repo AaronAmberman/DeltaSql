@@ -1,7 +1,10 @@
 ﻿using DeltaSql.Enums;
+using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using WPF.Translations;
@@ -14,6 +17,7 @@ namespace DeltaSql.ViewModels
 
         private ICommand clearCommand;
         private ICommand connectCommand;
+        private ConnectionStatus connectionStatus = ConnectionStatus.NotConnected;
         private ICommand connectionStringCommand;
         private string connectionString = string.Empty;
         private string database = string.Empty;
@@ -26,6 +30,7 @@ namespace DeltaSql.ViewModels
         private ObservableCollection<string> previousConnections = new ObservableCollection<string>();
         private int selectedAuthMode;
         private string server = string.Empty;
+        private SqlConnectionStringBuilder sqlConnectionStringBuilder;
         private Translation translations;
         private string username = string.Empty;
         private Visibility visibility = Visibility.Visible;
@@ -35,7 +40,7 @@ namespace DeltaSql.ViewModels
         private ICommand wordsInitialCatalogCommand;
         private ICommand wordsUsernameCommand;
         private ICommand wordsPasswordCommand;
-        private ICommand wordsIntegratedSecurityCommand;        
+        private ICommand wordsIntegratedSecurityCommand;
 
         #endregion
 
@@ -46,6 +51,16 @@ namespace DeltaSql.ViewModels
         public ICommand ConnectCommand => connectCommand ?? (connectCommand = new RelayCommand(Connect, CanConnect));
 
         public ICommand ConnectionStringCommand => connectionStringCommand ?? (connectionStringCommand = new RelayCommand(ConnectionStringsCom));
+
+        public ConnectionStatus ConnectionStatus 
+        { 
+            get => connectionStatus; 
+            set
+            {
+                connectionStatus = value;
+                OnPropertyChanged();
+            }
+        }
 
         public string ConnectionString
         {
@@ -169,6 +184,8 @@ namespace DeltaSql.ViewModels
             }
         }
 
+        public SqlConnection SqlConnection { get; private set; }
+
         public dynamic Translations 
         {
             get => translations; 
@@ -231,13 +248,21 @@ namespace DeltaSql.ViewModels
 
         #endregion
 
+        #region Events
+
+        public event EventHandler Connected;
+        public event EventHandler<CancelEventArgs> Connecting;
+
+        #endregion
+
         #region Methods
 
         private bool CanConnect()
         {
             if (ManualMode)
             {
-                return !string.IsNullOrWhiteSpace(ConnectionString) &&
+                return !string.IsNullOrWhiteSpace(ConnectionString) && 
+                    (ConnectionStatus == ConnectionStatus.NotConnected || ConnectionStatus == ConnectionStatus.DatabaseConnectionRequired || ConnectionStatus == ConnectionStatus.ServerConnectionRequired) &&
                     ((ConnectionString.Contains("Server=") && ConnectionString.Contains("User Id=") && ConnectionString.Contains("Password=")) ||
                     (ConnectionString.Contains("Server=") && ConnectionString.Contains("Integrated Security=")));
             }
@@ -252,7 +277,7 @@ namespace DeltaSql.ViewModels
                     if (string.IsNullOrWhiteSpace(Password)) return false;
                 }
 
-                return true;
+                return ConnectionStatus == ConnectionStatus.NotConnected || ConnectionStatus == ConnectionStatus.DatabaseConnectionRequired || ConnectionStatus == ConnectionStatus.ServerConnectionRequired;
             }
         }
 
@@ -288,20 +313,114 @@ namespace DeltaSql.ViewModels
 
             if (!VerifyConnectionString()) return;
 
-            SqlConnectionStringBuilder sqlConnectionStringBuilder = new SqlConnectionStringBuilder(ConnectionString);
+            CancelEventArgs cancelEventArgs = new CancelEventArgs();
+
+            Connecting?.Invoke(this, cancelEventArgs);
+
+            if (cancelEventArgs.Cancel) return;
 
             if (!string.IsNullOrWhiteSpace(sqlConnectionStringBuilder.InitialCatalog))
             {
                 ServiceLocator.Instance.LoggingService.Debug(
-                    string.Format(ServiceLocator.Instance.MainWindowViewModel.Translations.AttemptingDatabaseConnection, 
+                    string.Format(Translations.AttemptingDatabaseConnection, 
                         sqlConnectionStringBuilder.InitialCatalog));
             }
             else
             {
                 ServiceLocator.Instance.LoggingService.Debug(
-                    string.Format(ServiceLocator.Instance.MainWindowViewModel.Translations.AttemptingServerConnection, 
+                    string.Format(Translations.AttemptingServerConnection, 
                         sqlConnectionStringBuilder.DataSource));
             }
+
+            ConnectionAttempt();
+        }
+
+        private void ConnectionAttempt()
+        {
+            string cnt = string.IsNullOrWhiteSpace(sqlConnectionStringBuilder.InitialCatalog) ? sqlConnectionStringBuilder.DataSource : sqlConnectionStringBuilder.InitialCatalog;
+
+            ServiceLocator.Instance.MainWindowViewModel.ProgressViewModel.ProgressTitle = Translations.ConnectingMessageTitle;
+            ServiceLocator.Instance.MainWindowViewModel.ProgressViewModel.ProgressIsIndeterminate = true;
+
+            if (string.IsNullOrWhiteSpace(sqlConnectionStringBuilder.InitialCatalog))
+                ServiceLocator.Instance.MainWindowViewModel.ProgressViewModel.ProgressMessage =
+                    string.Format(Translations.AttemptingServerConnection, cnt);
+            else
+                ServiceLocator.Instance.MainWindowViewModel.ProgressViewModel.ProgressMessage =
+                    string.Format(Translations.AttemptingDatabaseConnection, cnt);
+
+            ServiceLocator.Instance.MainWindowViewModel.ProgressViewModel.ProgressDialogVisbility = Visibility.Visible;
+
+            Task.Run(() =>
+            {
+                try
+                {
+                    SqlConnection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
+
+                    // test connection
+                    SqlConnection.Open();
+                    SqlConnection.Close();
+                }
+                catch (Exception ex)
+                {
+                    SqlConnection = null;
+
+                    string exMes = ex.Message;
+
+                    if (!exMes.EndsWith('.')) exMes += ".";
+
+                    ServiceLocator.Instance.LoggingService.Error(string.Format(Translations.ConnectionError, cnt, exMes));
+
+                    if (ManualMode)
+                    {
+                        ManualEntryAcceptanceState = AcceptanceState.Error;
+                        ManualEntryWarningError = exMes;
+                    }
+                    else
+                    {
+                        InfoEntryAcceptanceState = AcceptanceState.Error;
+                        InfoEntryWarningError = exMes;
+                    }
+                }
+            }).ContinueWith(task =>
+            {
+                ServiceLocator.Instance.MainWindowViewModel.ProgressViewModel.ProgressMessage = string.Empty;
+                ServiceLocator.Instance.MainWindowViewModel.ProgressViewModel.ProgressTitle = string.Empty;
+                ServiceLocator.Instance.MainWindowViewModel.ProgressViewModel.ProgressIsIndeterminate = false;
+                ServiceLocator.Instance.MainWindowViewModel.ProgressViewModel.ProgressDialogVisbility = Visibility.Collapsed;
+
+                if (SqlConnection == null)
+                {
+                    string cnt = string.IsNullOrWhiteSpace(sqlConnectionStringBuilder.InitialCatalog) ? sqlConnectionStringBuilder.DataSource : sqlConnectionStringBuilder.InitialCatalog;
+
+                    ServiceLocator.Instance.LoggingService.Warning(string.Format(Translations.ConnectionError2, cnt));
+
+                    return;
+                }
+
+                if (task.Exception == null || !task.IsFaulted)
+                {
+                    if (string.IsNullOrWhiteSpace(sqlConnectionStringBuilder.InitialCatalog))
+                    {
+                        ConnectionStatus = ConnectionStatus.ServerConnected;
+
+                        ServiceLocator.Instance.LoggingService.Info(string.Format(Translations.ConnectedToServer, sqlConnectionStringBuilder.DataSource));
+                    }
+                    else
+                    {
+                        ConnectionStatus = ConnectionStatus.DatabaseConnected;
+
+                        ServiceLocator.Instance.LoggingService.Info(string.Format(Translations.ConnectedToDatabase, sqlConnectionStringBuilder.InitialCatalog));
+                    }
+
+                    Connected?.Invoke(this, EventArgs.Empty);
+                }
+            });
+        }
+
+        public void ConnectIfAble()
+        {
+            if (CanConnect()) Connect();
         }
 
         private void ConnectionStringsCom()
@@ -330,31 +449,55 @@ namespace DeltaSql.ViewModels
                 ConnectionString = temp;
             }
 
-            SqlConnectionStringBuilder sqlConnectionStringBuilder = new SqlConnectionStringBuilder(ConnectionString);
+            sqlConnectionStringBuilder = new SqlConnectionStringBuilder(ConnectionString);
 
-            if (string.IsNullOrWhiteSpace(sqlConnectionStringBuilder.DataSource))
+            if (ConnectionStatus == ConnectionStatus.NotConnected)
             {
-                WriteStringToAppropriateSqlInputStatus(ServiceLocator.Instance.MainWindowViewModel.Translations.MissingServerName, AcceptanceState.Error);
-
-                return false;
-            }
-
-            if (!sqlConnectionStringBuilder.IntegratedSecurity) // means SQL auth
-            {
-                if (string.IsNullOrWhiteSpace(sqlConnectionStringBuilder.UserID))
+                if (string.IsNullOrWhiteSpace(sqlConnectionStringBuilder.DataSource))
                 {
-                    WriteStringToAppropriateSqlInputStatus(ServiceLocator.Instance.MainWindowViewModel.Translations.MissingUsername, AcceptanceState.Error);
+                    WriteStringToAppropriateSqlInputStatus(Translations.MissingServerName, AcceptanceState.Error);
 
                     return false;
                 }
 
-                if (string.IsNullOrWhiteSpace(sqlConnectionStringBuilder.Password))
+                if (!sqlConnectionStringBuilder.IntegratedSecurity) // means SQL auth
                 {
-                    WriteStringToAppropriateSqlInputStatus(ServiceLocator.Instance.MainWindowViewModel.Translations.MissingPassword, AcceptanceState.Error);
+                    if (string.IsNullOrWhiteSpace(sqlConnectionStringBuilder.UserID))
+                    {
+                        WriteStringToAppropriateSqlInputStatus(Translations.MissingUsername, AcceptanceState.Error);
+
+                        return false;
+                    }
+
+                    if (string.IsNullOrWhiteSpace(sqlConnectionStringBuilder.Password))
+                    {
+                        WriteStringToAppropriateSqlInputStatus(Translations.MissingPassword, AcceptanceState.Error);
+
+                        return false;
+                    }
+                }
+            }
+            else if (ConnectionStatus == ConnectionStatus.DatabaseConnectionRequired)
+            {
+                if (string.IsNullOrWhiteSpace(sqlConnectionStringBuilder.InitialCatalog))
+                {
+                    WriteStringToAppropriateSqlInputStatus(Translations.DatabaseRequired, AcceptanceState.Error);
 
                     return false;
                 }
             }
+            else if (ConnectionStatus == ConnectionStatus.ServerConnectionRequired)
+            {
+                if (!string.IsNullOrWhiteSpace(sqlConnectionStringBuilder.InitialCatalog))
+                {
+                    WriteStringToAppropriateSqlInputStatus(Translations.ServerRequired, AcceptanceState.Error);
+
+                    return false;
+                }
+            }
+
+            // make sure to update the connection string to the one constructed from the builder
+            ConnectionString = sqlConnectionStringBuilder.ConnectionString;
 
             return true;
         }
@@ -392,13 +535,13 @@ namespace DeltaSql.ViewModels
 
             if (ConnectionString.Contains(temp))
             {
-                ManualEntryWarningError = string.Format(ServiceLocator.Instance.MainWindowViewModel.Translations.ConnectionStringContainsParameter, temp.Substring(0, temp.Length - 1));
+                ManualEntryWarningError = string.Format(Translations.ConnectionStringContainsParameter, temp.Substring(0, temp.Length - 1));
                 ManualEntryAcceptanceState = AcceptanceState.Error;
             }
             else ConnectionString += $"{parameter};";
         }
 
-        private void WriteStringToAppropriateSqlInputStatus(string message, AcceptanceState acceptanceState)
+        public void WriteStringToAppropriateSqlInputStatus(string message, AcceptanceState acceptanceState)
         {
             if (ManualMode)
             {

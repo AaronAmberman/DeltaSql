@@ -197,7 +197,8 @@
             </Grid>
         </internalDialogs:MovableResizableInternalDialog>
         <internalDialogs:ProgressInternalDialog x:Name="progressDialog" 
-                                                CloseOnEscape="False" 
+                                                CloseOnEscape="False" IsModal="False"
+                                                ProgressDialogDefaultHeight="150" ProgressDialogDefaultWidth="400"
                                                 ProgressDialogBackground="{DynamicResource DeltaSql.ProgressBox.Background}" 
                                                 TitleAreaBackground="{DynamicResource DeltaSql.ProgressBox.Title.Background}" 
                                                 Foreground="{DynamicResource DeltaSql.ProgressBox.Foreground}"

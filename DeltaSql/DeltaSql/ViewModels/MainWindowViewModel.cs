@@ -1,6 +1,10 @@
-﻿using SimpleLogger;
+﻿using DeltaSql.Enums;
+using DeltaSql.Properties;
+using SimpleLogger;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -75,6 +79,98 @@ namespace DeltaSql.ViewModels
             Dispatcher.BeginInvoke(action);
         }
 
+        public void SqlInputViewModel_Connected(object sender, EventArgs e)
+        {
+            if (sender == SqlInputViewModelLeft)
+            {
+                // right side is already connected, don't do anything
+                if (!(SqlInputViewModelRight.ConnectionStatus == ConnectionStatus.DatabaseConnected || SqlInputViewModelLeft.ConnectionStatus == ConnectionStatus.ServerConnected))
+                {
+                    if (SqlInputViewModelLeft.ConnectionStatus == ConnectionStatus.DatabaseConnected)
+                        SqlInputViewModelRight.ConnectionStatus = ConnectionStatus.DatabaseConnectionRequired;
+                    else if (SqlInputViewModelLeft.ConnectionStatus == ConnectionStatus.ServerConnected)
+                        SqlInputViewModelRight.ConnectionStatus = ConnectionStatus.ServerConnectionRequired;
+                }
+            }
+            else if (sender == SqlInputViewModelRight)
+            {
+                // left side is already connected, don't do anything
+                if (!(SqlInputViewModelLeft.ConnectionStatus == ConnectionStatus.DatabaseConnected || SqlInputViewModelLeft.ConnectionStatus == ConnectionStatus.ServerConnected))
+                {
+                    if (SqlInputViewModelRight.ConnectionStatus == ConnectionStatus.DatabaseConnected)
+                        SqlInputViewModelLeft.ConnectionStatus = ConnectionStatus.DatabaseConnectionRequired;
+                    else if (SqlInputViewModelRight.ConnectionStatus == ConnectionStatus.ServerConnected)
+                        SqlInputViewModelLeft.ConnectionStatus = ConnectionStatus.ServerConnectionRequired;
+                }
+            }
+
+            if (SqlInputViewModelLeft.SqlConnection != null && SqlInputViewModelRight.SqlConnection != null)
+            {
+                SqlInputViewModelLeft.Visibility = Visibility.Collapsed;
+                SqlInputViewModelRight.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        public void SqlInputViewModel_Connecting(object sender, CancelEventArgs e)
+        {
+            // make sure they both have connection strings before we attempt to compare them
+            if (string.IsNullOrWhiteSpace(SqlInputViewModelLeft.ConnectionString) && !string.IsNullOrWhiteSpace(SqlInputViewModelRight.ConnectionString)) return;
+            if (!string.IsNullOrWhiteSpace(SqlInputViewModelLeft.ConnectionString) && string.IsNullOrWhiteSpace(SqlInputViewModelRight.ConnectionString)) return;
+
+            // make sure the left and right side are not trying to connect to the same data source!!!
+            SqlConnectionStringBuilder left = new SqlConnectionStringBuilder(SqlInputViewModelLeft.ConnectionString);
+            SqlConnectionStringBuilder right = new SqlConnectionStringBuilder(SqlInputViewModelRight.ConnectionString);
+
+            string message = string.Empty;
+
+            // we require matching connection types (database & database or server and server)
+            if (string.IsNullOrEmpty(left.InitialCatalog) && !string.IsNullOrEmpty(right.InitialCatalog))
+            {
+                message = Translations.ConnectionTypeDoesNotMatch;
+            }
+
+            // only continue to process if we don't have an existing issue
+            if (string.IsNullOrEmpty(message))
+            {
+                if (!string.IsNullOrEmpty(left.InitialCatalog) && string.IsNullOrEmpty(right.InitialCatalog))
+                {
+                    message = Translations.ConnectionTypeDoesNotMatch;
+                }
+            }
+
+            // only continue to process if we don't have an existing issue
+            if (string.IsNullOrEmpty(message))
+            {
+                if (string.IsNullOrEmpty(left.InitialCatalog))
+                {
+                    // compare servers only
+                    if (left.DataSource.Equals(right.DataSource, StringComparison.OrdinalIgnoreCase))
+                    {
+                        message = Translations.SameDataSource;
+                    }
+                }
+                else
+                {
+                    // compare servers and databases
+                    if (left.DataSource.Equals(right.DataSource, StringComparison.OrdinalIgnoreCase) && 
+                        left.InitialCatalog.Equals(right.InitialCatalog, StringComparison.OrdinalIgnoreCase))
+                    {
+                        message = Translations.SameDataSource;
+                    }
+                }
+            }
+
+            // if we have a message, we have an error of some kind
+            if (!string.IsNullOrEmpty(message))
+            {
+                SqlInputViewModel vm = sender as SqlInputViewModel;
+
+                vm.WriteStringToAppropriateSqlInputStatus(message, AcceptanceState.Error);
+
+                e.Cancel = true;
+            }
+        }
+
         public void Invoke(Action action)
         {
             Dispatcher.Invoke(action);
@@ -82,38 +178,41 @@ namespace DeltaSql.ViewModels
 
         public void LoggingService_LogEntry(object sender, (LogLevel, string) e)
         {
-            if (RichTextBox == null) return;
-
-            if (RichTextBox.Document == null)
+            Invoke(() => 
             {
-                RichTextBox.Document = new FlowDocument();
-                RichTextBox.Document.Blocks.Clear();
-            }
+                if (RichTextBox == null) return;
 
-            // if blank lines are desired in the output feed then use a space
-            List<Block> emptyBlocks = RichTextBox.Document.Blocks.Where(b => string.IsNullOrEmpty(new TextRange(b.ContentStart, b.ContentEnd).Text)).ToList();
+                if (RichTextBox.Document == null)
+                {
+                    RichTextBox.Document = new FlowDocument();
+                    RichTextBox.Document.Blocks.Clear();
+                }
 
-            foreach (Block b in emptyBlocks) RichTextBox.Document.Blocks.Remove(b);
+                // if blank lines are desired in the output feed then use a space
+                List<Block> emptyBlocks = RichTextBox.Document.Blocks.Where(b => string.IsNullOrEmpty(new TextRange(b.ContentStart, b.ContentEnd).Text)).ToList();
 
-            if (string.IsNullOrWhiteSpace(e.Item2)) return;
+                foreach (Block b in emptyBlocks) RichTextBox.Document.Blocks.Remove(b);
 
-            Paragraph p = new Paragraph
-            {
-                Margin = new Thickness(0),
-                Padding = new Thickness(0)
-            };
+                if (string.IsNullOrWhiteSpace(e.Item2)) return;
 
-            switch (e.Item1)
-            {
-                case LogLevel.Debug: p.Inlines.Add(new Italic(new Run(e.Item2) { Foreground = Brushes.CornflowerBlue })); break;
-                case LogLevel.Error: p.Inlines.Add(new Bold(new Run(e.Item2) { Foreground = Brushes.Red })); break;
-                case LogLevel.Fatal: p.Inlines.Add(new Bold(new Italic(new Run(e.Item2) { Foreground = Brushes.DarkRed }))); break;
-                case LogLevel.Info: p.Inlines.Add(new Run(e.Item2) { Foreground = Brushes.Black }); break;
-                case LogLevel.Trace: p.Inlines.Add(new Italic(new Run(e.Item2) { Foreground = Brushes.SandyBrown })); break;
-                case LogLevel.Warning: p.Inlines.Add(new Bold(new Run(e.Item2) { Foreground = Brushes.Orange })); break;
-            }
+                Paragraph p = new Paragraph
+                {
+                    Margin = new Thickness(0),
+                    Padding = new Thickness(0)
+                };
 
-            RichTextBox.Document.Blocks.Add(p);
+                switch (e.Item1)
+                {
+                    case LogLevel.Debug: p.Inlines.Add(new Italic(new Run(e.Item2) { Foreground = Brushes.CornflowerBlue })); break;
+                    case LogLevel.Error: p.Inlines.Add(new Bold(new Run(e.Item2) { Foreground = Brushes.Red })); break;
+                    case LogLevel.Fatal: p.Inlines.Add(new Bold(new Italic(new Run(e.Item2) { Foreground = Brushes.DarkRed }))); break;
+                    case LogLevel.Info: p.Inlines.Add(new Run(e.Item2) { Foreground = Settings.Default.Theme == 0 ? Brushes.Black : Brushes.White }); break;
+                    case LogLevel.Trace: p.Inlines.Add(new Italic(new Run(e.Item2) { Foreground = Brushes.SandyBrown })); break;
+                    case LogLevel.Warning: p.Inlines.Add(new Bold(new Run(e.Item2) { Foreground = Brushes.Orange })); break;
+                }
+
+                RichTextBox.Document.Blocks.Add(p);
+            });
         }
 
         private void SetMessageBoxState(string message, string title, bool isModal, MessageBoxButton button, MessageBoxInternalDialogImage image, Visibility visibility)
@@ -166,6 +265,47 @@ namespace DeltaSql.ViewModels
         private void ShowSettings()
         {
             SettingsViewModel.Visibility = Visibility.Visible;
+        }
+
+        private void ThreadedSetMessageBoxState(string message, string title, bool isModal, MessageBoxButton button, MessageBoxInternalDialogImage image, Visibility visibility)
+        {
+            Invoke(() =>
+            {
+                SetMessageBoxState(message, title, isModal, button, image, visibility);
+            });
+        }
+
+        public void ThreadedShowMessageBox(string message)
+        {
+            ThreadedSetMessageBoxState(message, string.Empty, true, MessageBoxButton.OK, MessageBoxInternalDialogImage.Information, Visibility.Visible);
+        }
+
+        public void ThreadedShowMessageBox(string message, string title)
+        {
+            ThreadedSetMessageBoxState(message, title, true, MessageBoxButton.OK, MessageBoxInternalDialogImage.Information, Visibility.Visible);
+        }
+
+        public void ThreadedShowMessageBox(string message, string title, MessageBoxButton button)
+        {
+            ThreadedSetMessageBoxState(message, title, true, button, MessageBoxInternalDialogImage.Information, Visibility.Visible);
+        }
+
+        public void ThreadedShowMessageBox(string message, string title, MessageBoxInternalDialogImage image)
+        {
+            ThreadedSetMessageBoxState(message, title, true, MessageBoxButton.OK, image, Visibility.Visible);
+        }
+
+        public void ThreadedShowMessageBox(string message, string title, MessageBoxButton button, MessageBoxInternalDialogImage image)
+        {
+            ThreadedSetMessageBoxState(message, title, true, button, image, Visibility.Visible);
+        }
+
+        public MessageBoxResult ThreadedShowQuestionBox(string question, string title)
+        {
+            return Dispatcher.Invoke(() => 
+            {
+                return ShowQuestionBox(question, title);
+            });
         }
 
         #endregion
