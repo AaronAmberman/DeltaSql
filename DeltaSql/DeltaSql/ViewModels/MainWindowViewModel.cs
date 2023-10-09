@@ -84,7 +84,7 @@ namespace DeltaSql.ViewModels
             if (sender == SqlInputViewModelLeft)
             {
                 // right side is already connected, don't do anything
-                if (!(SqlInputViewModelRight.ConnectionStatus == ConnectionStatus.DatabaseConnected || SqlInputViewModelLeft.ConnectionStatus == ConnectionStatus.ServerConnected))
+                if (!(SqlInputViewModelRight.ConnectionStatus == ConnectionStatus.DatabaseConnected || SqlInputViewModelRight.ConnectionStatus == ConnectionStatus.ServerConnected))
                 {
                     if (SqlInputViewModelLeft.ConnectionStatus == ConnectionStatus.DatabaseConnected)
                         SqlInputViewModelRight.ConnectionStatus = ConnectionStatus.DatabaseConnectionRequired;
@@ -168,6 +168,18 @@ namespace DeltaSql.ViewModels
                 vm.WriteStringToAppropriateSqlInputStatus(message, AcceptanceState.Error);
 
                 e.Cancel = true;
+            }
+        }
+
+        public void SqlInputViewModel_Disconnected(object sender, EventArgs e)
+        {
+            if (sender == SqlInputViewModelLeft)
+            {
+                SqlInputViewModelRight.ConnectionStatus = ConnectionStatus.NotConnected;
+            }
+            else if (sender == SqlInputViewModelRight)
+            {
+                SqlInputViewModelLeft.ConnectionStatus = ConnectionStatus.NotConnected;
             }
         }
 

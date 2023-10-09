@@ -255,6 +255,7 @@ namespace DeltaSql.ViewModels
 
         public event EventHandler Connected;
         public event EventHandler<CancelEventArgs> Connecting;
+        public event EventHandler Disconnected;
 
         #endregion
 
@@ -452,6 +453,8 @@ namespace DeltaSql.ViewModels
             {
                 ServiceLocator.Instance.LoggingService.Info(string.Format(Translations.DisconnectingServer, sqlConnectionStringBuilder.DataSource));
             }
+
+            Disconnected?.Invoke(this, EventArgs.Empty);
         }
 
         private bool VerifyConnectionString()

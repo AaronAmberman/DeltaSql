@@ -66,8 +66,10 @@ namespace DeltaSql
             };
             mainWindowViewModel.SqlInputViewModelLeft.Connected += mainWindowViewModel.SqlInputViewModel_Connected;
             mainWindowViewModel.SqlInputViewModelLeft.Connecting += mainWindowViewModel.SqlInputViewModel_Connecting;
+            mainWindowViewModel.SqlInputViewModelLeft.Disconnected += mainWindowViewModel.SqlInputViewModel_Disconnected;
             mainWindowViewModel.SqlInputViewModelRight.Connected += mainWindowViewModel.SqlInputViewModel_Connected;
             mainWindowViewModel.SqlInputViewModelRight.Connecting += mainWindowViewModel.SqlInputViewModel_Connecting;
+            mainWindowViewModel.SqlInputViewModelRight.Disconnected += mainWindowViewModel.SqlInputViewModel_Disconnected;
 
             ServiceLocator.Instance.MainWindowViewModel = mainWindowViewModel;
             ServiceLocator.Instance.LoggingService.LogEntry += mainWindowViewModel.LoggingService_LogEntry;
