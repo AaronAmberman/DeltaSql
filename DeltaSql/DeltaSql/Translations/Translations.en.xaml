@@ -34,6 +34,9 @@
     <sys:String x:Key="DatabaseConnectionRequired">Database Connection Required</sys:String>
     <sys:String x:Key="DatabaseOptional">database (optional)</sys:String>
     <sys:String x:Key="DatabaseRequired">A database connection is required because a database connection was made on the other side.</sys:String>
+    <sys:String x:Key="Disconnect">Disconnect</sys:String>
+    <sys:String x:Key="DisconnectingDatabase">Disconnect from database {0}.</sys:String>
+    <sys:String x:Key="DisconnectingServer">Disconnect from server {0}.</sys:String>
     <sys:String x:Key="English">English</sys:String>
     <sys:String x:Key="Error">Error</sys:String>
     <sys:String x:Key="Errors">Errors</sys:String>

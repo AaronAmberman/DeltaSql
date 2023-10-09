@@ -21,6 +21,7 @@ namespace DeltaSql.ViewModels
         private ICommand connectionStringCommand;
         private string connectionString = string.Empty;
         private string database = string.Empty;
+        private ICommand disconnectCommand;
         private AcceptanceState infoEntryAcceptanceState;
         private string infoEntryWarningError = string.Empty;
         private AcceptanceState manualEntryAcceptanceState;
@@ -81,6 +82,8 @@ namespace DeltaSql.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        public ICommand DisconnectCommand => disconnectCommand ?? (disconnectCommand = new RelayCommand(Disconnect, CanDisconnect));
 
         public AcceptanceState InfoEntryAcceptanceState
         {
@@ -281,6 +284,11 @@ namespace DeltaSql.ViewModels
             }
         }
 
+        private bool CanDisconnect()
+        {
+            return SqlConnection != null;
+        }
+
         private void Clear()
         {
             ConnectionString = string.Empty;
@@ -426,6 +434,24 @@ namespace DeltaSql.ViewModels
         private void ConnectionStringsCom()
         {
             Process.Start(new ProcessStartInfo("https://www.connectionstrings.com/sql-server/") { UseShellExecute = true });
+        }
+
+        private void Disconnect()
+        {
+            // we don't hold connections to the database open, so just clean up the object
+            SqlConnection.Dispose();
+            SqlConnection = null;
+
+            ConnectionStatus = ConnectionStatus.NotConnected;
+
+            if (ConnectionStatus == ConnectionStatus.DatabaseConnected)
+            {
+                ServiceLocator.Instance.LoggingService.Info(string.Format(Translations.DisconnectingDatabase, sqlConnectionStringBuilder.InitialCatalog));
+            }
+            else if (ConnectionStatus == ConnectionStatus.ServerConnected)
+            {
+                ServiceLocator.Instance.LoggingService.Info(string.Format(Translations.DisconnectingServer, sqlConnectionStringBuilder.DataSource));
+            }
         }
 
         private bool VerifyConnectionString()

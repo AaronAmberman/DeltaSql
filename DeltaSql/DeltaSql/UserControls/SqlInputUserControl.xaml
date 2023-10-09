@@ -289,11 +289,17 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="1" BorderThickness="0" Padding="2" ToolTip="{Binding Translations.ConnectToolTip, FallbackValue=Connect to a MS SQL database or a MS SQL server}"
+                <Button Grid.Column="1" BorderThickness="0" Padding="2" 
+                        ToolTip="{Binding Translations.ConnectToolTip, FallbackValue=Connect to a MS SQL database or a MS SQL server}"
                         Style="{StaticResource ConnectButtonStyle}" Content="{StaticResource Connect}"
                         Command="{Binding ConnectCommand}" />
-                <Button Grid.Column="2" Background="Transparent" BorderThickness="0" Padding="2" Margin="5,0,0,0" 
+                <Button Grid.Column="2" BorderThickness="0" Padding="2" Margin="5,0,0,0" Background="Transparent"
+                        ToolTip="{Binding Translations.Disconnect, FallbackValue=Disconnect}"
+                        Content="{StaticResource Disconnect}"
+                        Command="{Binding DisconnectCommand}" />
+                <Button Grid.Column="3" Background="Transparent" BorderThickness="0" Padding="2" Margin="5,0,0,0" 
                         ToolTip="{Binding Translations.ClearData, FallbackValue=Clear data}"
                         Content="{StaticResource Clear}" Command="{Binding ClearCommand}" />
             </Grid>
