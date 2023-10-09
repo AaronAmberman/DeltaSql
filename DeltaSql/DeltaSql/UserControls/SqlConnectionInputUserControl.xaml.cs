@@ -4,16 +4,16 @@ using System.Windows.Input;
 
 namespace DeltaSql.UserControls
 {
-    public partial class SqlInputUserControl : UserControl
+    public partial class SqlConnectionInputUserControl : UserControl
     {
-        public SqlInputUserControl()
+        public SqlConnectionInputUserControl()
         {
             InitializeComponent();
 
-            KeyDown += SqlInputUserControl_KeyDown;
+            KeyDown += SqlConnectionInputUserControl_KeyDown;
         }
 
-        private void SqlInputUserControl_KeyDown(object sender, KeyEventArgs e)
+        private void SqlConnectionInputUserControl_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter || e.Key == Key.Return) 
             {

@@ -47,7 +47,7 @@
                                                         FocusParent="{Binding ElementName=inputOneGrid}"
                                                         Visibility="{Binding SqlInputViewModelLeft.Visibility}">
                             <Grid>
-                                <uc:SqlInputUserControl Margin="5" KeyboardNavigation.TabNavigation="Cycle" DataContext="{Binding SqlInputViewModelLeft}" />
+                                <uc:SqlConnectionInputUserControl Margin="5" KeyboardNavigation.TabNavigation="Cycle" DataContext="{Binding SqlInputViewModelLeft}" />
                             </Grid>
                         </internalDialogs:InternalDialog>
                     </Grid>
@@ -65,7 +65,7 @@
                                                         FocusParent="{Binding ElementName=inputTwoGrid}"
                                                         Visibility="{Binding SqlInputViewModelRight.Visibility}">
                             <Grid>
-                                <uc:SqlInputUserControl Margin="5" KeyboardNavigation.TabNavigation="Cycle" DataContext="{Binding SqlInputViewModelRight}" />
+                                <uc:SqlConnectionInputUserControl Margin="5" KeyboardNavigation.TabNavigation="Cycle" DataContext="{Binding SqlInputViewModelRight}" />
                             </Grid>
                         </internalDialogs:InternalDialog>
                     </Grid>
