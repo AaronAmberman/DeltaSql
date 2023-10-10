@@ -307,6 +307,10 @@ namespace DeltaSql.ViewModels
 
         private void Clear()
         {
+            // if the control is connected when the user clicks clear then don't do anything, make them click disconnect (then they can click clear)
+            if (ConnectionStatus == ConnectionStatus.DatabaseConnected || ConnectionStatus == ConnectionStatus.ServerConnected)
+                return;
+
             ConnectionString = string.Empty;
             Database = string.Empty;
             InfoEntryAcceptanceState = AcceptanceState.None;
@@ -460,6 +464,7 @@ namespace DeltaSql.ViewModels
             SqlConnection = null;
 
             ConnectionStatus = ConnectionStatus.NotConnected;
+            PreviousConnectionSelectedIndex = -1;
 
             if (ConnectionStatus == ConnectionStatus.DatabaseConnected)
             {

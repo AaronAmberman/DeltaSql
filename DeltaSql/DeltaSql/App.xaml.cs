@@ -121,7 +121,7 @@ namespace DeltaSql
 
             #endregion
 
-            #region Previous Connections
+            #region Settings
 
             if (Settings.Default.PreviousConnections == null)
                 Settings.Default.PreviousConnections = new System.Collections.Specialized.StringCollection();
