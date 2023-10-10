@@ -87,12 +87,8 @@
                                                         TitleContent="{Binding Translations.Settings, FallbackValue=Settings}" 
                                                         Visibility="{Binding SettingsViewModel.Visibility, FallbackValue=Collapsed}"
                                                         Result="{Binding SettingsViewModel.Result, Mode=OneWayToSource}"
-                                                        FocusParent="{Binding ElementName=mainGrid}">
-            <internalDialogs:MovableResizableInternalDialog.CloseButtonStyle>
-                <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                    <Setter Property="Visibility" Value="Collapsed" />
-                </Style>
-            </internalDialogs:MovableResizableInternalDialog.CloseButtonStyle>
+                                                        FocusParent="{Binding ElementName=mainGrid}"
+                                                        CloseButtonStyle="{DynamicResource CollapsedButtonStyle}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -173,16 +169,8 @@
                                                         ContentBackground="{DynamicResource DeltaSql.InternalDialog}"
                                                         TitleContent="{Binding Translations.About, FallbackValue=About}"
                                                         Visibility="{Binding SettingsViewModel.AboutBoxVisibility, FallbackValue=Collapsed}"
-                                                        FocusParent="{Binding ElementName=mainGrid}">
-            <internalDialogs:MovableResizableInternalDialog.CloseButtonStyle>
-                <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                    <Setter Property="Focusable" Value="False" />
-                    <Setter Property="Background" Value="#00000000" />
-                    <Setter Property="BorderBrush" Value="#00000000" />
-                    <Setter Property="BorderThickness" Value="0" />
-                    <Setter Property="Content" Value="{StaticResource CloseX}" />
-                </Style>
-            </internalDialogs:MovableResizableInternalDialog.CloseButtonStyle>
+                                                        FocusParent="{Binding ElementName=mainGrid}"
+                                                        CloseButtonStyle="{DynamicResource InternalDialogCloseButtonStyle}">
             <Grid>
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <TextBlock TextWrapping="Wrap" Style="{StaticResource TextBlockForegroundStyle}">
@@ -206,20 +194,9 @@
                                                 ProgressDialogMessage="{Binding ProgressViewModel.ProgressMessage}"
                                                 Title="{Binding ProgressViewModel.ProgressTitle}" ResizeGripVisibility="Collapsed"
                                                 ProgressValue="{Binding ProgressViewModel.ProgressValue}"
-                                                FocusParent="{Binding ElementName=mainGrid}">
-            <internalDialogs:ProgressInternalDialog.CloseButtonStyle>
-                <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                    <Setter Property="Visibility" Value="Collapsed" />
-                </Style>
-            </internalDialogs:ProgressInternalDialog.CloseButtonStyle>
-            <internalDialogs:ProgressInternalDialog.ProgressBarStyle>
-                <Style TargetType="ProgressBar" BasedOn="{StaticResource {x:Type ProgressBar}}">
-                    <Setter Property="IsIndeterminate" Value="{Binding ProgressViewModel.ProgressIsIndeterminate}" />
-                    <Setter Property="Maximum" Value="{Binding ProgressViewModel.ProgressMax}" />
-                    <Setter Property="Minimum" Value="{Binding ProgressViewModel.ProgressMin}" />
-                    <Setter Property="Height" Value="20" />
-                </Style>
-            </internalDialogs:ProgressInternalDialog.ProgressBarStyle>
+                                                FocusParent="{Binding ElementName=mainGrid}"
+                                                CloseButtonStyle="{DynamicResource CollapsedButtonStyle}"
+                                                ProgressBarStyle="{DynamicResource ProgressDialogProgressBarStyle}">
         </internalDialogs:ProgressInternalDialog>
         <internalDialogs:MessageBoxInternalDialog x:Name="messageBoxInternalDialog"
                                                   Grid.Row="0" Grid.RowSpan="2"
@@ -232,20 +209,9 @@
                                                   Title="{Binding MessageBoxViewModel.MessageBoxTitle}" MessageBoxImage="{Binding MessageBoxViewModel.MessageBoxImage}"
                                                   Result="{Binding MessageBoxViewModel.MessageBoxResult, Mode=TwoWay}" IsModal="{Binding MessageBoxViewModel.MessageBoxIsModal}"
                                                   MessageBoxButton="{Binding MessageBoxViewModel.MessageBoxButton}"
-                                                  FocusParent="{Binding ElementName=mainGrid}">
-            <internalDialogs:MessageBoxInternalDialog.CloseButtonStyle>
-                <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                    <Setter Property="Background" Value="Transparent" />
-                    <Setter Property="BorderBrush" Value="Transparent" />
-                    <Setter Property="BorderThickness" Value="0" />
-                    <Setter Property="Content" Value="{StaticResource CloseX}" />
-                </Style>
-            </internalDialogs:MessageBoxInternalDialog.CloseButtonStyle>
-            <internalDialogs:MessageBoxInternalDialog.ButtonStyle>
-                <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                    <Setter Property="MinWidth" Value="50" />
-                </Style>
-            </internalDialogs:MessageBoxInternalDialog.ButtonStyle>
+                                                  FocusParent="{Binding ElementName=mainGrid}"
+                                                  CloseButtonStyle="{DynamicResource InternalDialogCloseButtonStyle}"
+                                                  ButtonStyle="{DynamicResource MessageBoxDialogButtonStyle}">
         </internalDialogs:MessageBoxInternalDialog>
     </Grid>
 </Window>

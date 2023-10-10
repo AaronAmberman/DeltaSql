@@ -73,7 +73,7 @@
     <sys:String x:Key="SameDataSource">The data source for the left and the data source for the right cannot be the same data source.</sys:String>
     <sys:String x:Key="Server">Server</sys:String>
     <sys:String x:Key="ServerConnected">Server Connected</sys:String>
-    <sys:String x:Key="ServerConnecteionRequired">Server Connection Required</sys:String>
+    <sys:String x:Key="ServerConnectionRequired">Server Connection Required</sys:String>
     <sys:String x:Key="ServerRequired">A server connection is required because a server connection was made on the other side.</sys:String>
     <sys:String x:Key="ServerWatermark">server name[\instance name[,port]]</sys:String>
     <sys:String x:Key="Settings">Settings</sys:String>

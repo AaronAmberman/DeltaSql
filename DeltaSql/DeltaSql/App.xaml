@@ -13,6 +13,8 @@
             <converters:ThicknessConverter x:Key="ThicknessConverter" />
 
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/WpfImagery.xaml" />
+                
                 <theme:ThemeDictionary Source="pack://application:,,,/Theming/Dark/Colors.xaml"
                                        DarkSource="pack://application:,,,/Theming/Dark/Colors.xaml"
                                        LightSource="pack://application:,,,/Theming/Light/Colors.xaml" />
@@ -32,8 +34,6 @@
                 <theme:ThemeDictionary Source="pack://application:,,,/Theming/Dark/AppTheme.xaml"
                                        DarkSource="pack://application:,,,/Theming/Dark/AppTheme.xaml"
                                        LightSource="pack://application:,,,/Theming/Light/AppTheme.xaml" />
-
-                <ResourceDictionary Source="pack://application:,,,/WpfImagery.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

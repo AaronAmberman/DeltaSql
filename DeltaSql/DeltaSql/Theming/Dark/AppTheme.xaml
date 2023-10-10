@@ -87,15 +87,74 @@
     <!-- 
         Styles
     -->
+    <!-- Buttons -->
+    <Style x:Key="CollapsedButtonStyle" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+        <Setter Property="Visibility" Value="Collapsed" />
+    </Style>
+    <Style x:Key="InternalDialogCloseButtonStyle" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Background" Value="#00000000" />
+        <Setter Property="BorderBrush" Value="#00000000" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Content" Value="{StaticResource CloseX}" />
+    </Style>
+    <Style x:Key="MessageBoxDialogButtonStyle" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+        <Setter Property="MinWidth" Value="50" />
+    </Style>
+
     <!-- Grids -->
     <Style x:Key="GridStyle" TargetType="Grid">
         <Setter Property="Background" Value="{DynamicResource DeltaSql.Grid}" />
+    </Style>
+    <Style x:Key="CredentialsGridStyle" TargetType="Grid">
+        <Setter Property="IsEnabled" Value="True" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding SelectedAuthMode}" Value="0">
+                <Setter Property="IsEnabled" Value="False" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="PreviousConnectionGridStyle" TargetType="Grid">
+        <Setter Property="Visibility" Value="Visible" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding PreviousConnections.Count}" Value="0">
+                <Setter Property="Visibility" Value="Collapsed" />
+            </DataTrigger>
+        </Style.Triggers>
     </Style>
 
     <!-- Borders -->
     <Style x:Key="BorderStyle" TargetType="Border">
         <Setter Property="BorderBrush" Value="{DynamicResource DeltaSql.Border}" />
         <Setter Property="BorderThickness" Value="1" />
+    </Style>
+    <Style x:Key="ConnectedBorderStatusStyle" TargetType="Border">
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Height" Value="16" />
+        <Setter Property="Width" Value="16" />
+        <Setter Property="Background" Value="{DynamicResource DeltaSql.SqlInput.ConnectionStatus.NotConnected}" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding ConnectionStatus}" Value="DatabaseConnected">
+                <Setter Property="Background" Value="{DynamicResource DeltaSql.SqlInput.ConnectionStatus.DatabaseConnected}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding ConnectionStatus}" Value="DatabaseConnectionRequired">
+                <Setter Property="Background" Value="{DynamicResource DeltaSql.SqlInput.ConnectionStatus.DatabaseConnectionRequired}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding ConnectionStatus}" Value="ServerConnected">
+                <Setter Property="Background" Value="{DynamicResource DeltaSql.SqlInput.ConnectionStatus.ServerConnected}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding ConnectionStatus}" Value="ServerConnectionRequired">
+                <Setter Property="Background" Value="{DynamicResource DeltaSql.SqlInput.ConnectionStatus.ServerConnectionRequired}" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="PreviousConnectionBorderStyle" TargetType="Border">
+        <Setter Property="Visibility" Value="Visible" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding PreviousConnections.Count}" Value="0">
+                <Setter Property="Visibility" Value="Collapsed" />
+            </DataTrigger>
+        </Style.Triggers>
     </Style>
 
     <!-- TextBlocks -->
@@ -106,6 +165,68 @@
                 <Setter Property="Foreground" Value="{DynamicResource DeltaSql.Foreground.Disabled}" />
             </Trigger>
         </Style.Triggers>
+    </Style>
+    <Style x:Key="ConnectedTextBlockStyle" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource DeltaSql.SqlInput.ConnectionStatus.NotConnected}" />
+        <Setter Property="Text" Value="{Binding Translations.NotConnected, FallbackValue=Not Connected}" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding ConnectionStatus}" Value="DatabaseConnected">
+                <Setter Property="Foreground" Value="{DynamicResource DeltaSql.SqlInput.ConnectionStatus.DatabaseConnected}" />
+                <Setter Property="Text" Value="{Binding Translations.DatabaseConnected, FallbackValue=Database Connected}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding ConnectionStatus}" Value="DatabaseConnectionRequired">
+                <Setter Property="Foreground" Value="{DynamicResource DeltaSql.SqlInput.ConnectionStatus.DatabaseConnectionRequired}" />
+                <Setter Property="Text" Value="{Binding Translations.DatabaseConnectionRequired, FallbackValue=Database Connection Required}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding ConnectionStatus}" Value="ServerConnected">
+                <Setter Property="Foreground" Value="{DynamicResource DeltaSql.SqlInput.ConnectionStatus.ServerConnected}" />
+                <Setter Property="Text" Value="{Binding Translations.ServerConnected, FallbackValue=Server Connected}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding ConnectionStatus}" Value="ServerConnectionRequired">
+                <Setter Property="Foreground" Value="{DynamicResource DeltaSql.SqlInput.ConnectionStatus.ServerConnectionRequired}" />
+                <Setter Property="Text" Value="{Binding Translations.ServerConnectionRequired, FallbackValue=Server Connection Required}" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="InfoEntryWarningErrorStyle" TargetType="TextBlock">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding InfoEntryAcceptanceState}" Value="Accepted">
+                <Setter Property="Background" Value="{DynamicResource DeltaSql.Status.Accepted.Background}" />
+                <Setter Property="Foreground" Value="{DynamicResource DeltaSql.Status.Accepted.Foreground}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding InfoEntryAcceptanceState}" Value="Error">
+                <Setter Property="Background" Value="{DynamicResource DeltaSql.Status.Error.Background}" />
+                <Setter Property="Foreground" Value="{DynamicResource DeltaSql.Status.Error.Foreground}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding InfoEntryAcceptanceState}" Value="Warning">
+                <Setter Property="Background" Value="{DynamicResource DeltaSql.Status.Warning.Background}" />
+                <Setter Property="Foreground" Value="{DynamicResource DeltaSql.Status.Warning.Foreground}" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="ManualEntryWarningErrorStyle" TargetType="TextBlock">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding ManualEntryAcceptanceState}" Value="Accepted">
+                <Setter Property="Background" Value="{DynamicResource DeltaSql.Status.Accepted.Background}" />
+                <Setter Property="Foreground" Value="{DynamicResource DeltaSql.Status.Accepted.Foreground}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding ManualEntryAcceptanceState}" Value="Error">
+                <Setter Property="Background" Value="{DynamicResource DeltaSql.Status.Error.Background}" />
+                <Setter Property="Foreground" Value="{DynamicResource DeltaSql.Status.Error.Foreground}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding ManualEntryAcceptanceState}" Value="Warning">
+                <Setter Property="Background" Value="{DynamicResource DeltaSql.Status.Warning.Background}" />
+                <Setter Property="Foreground" Value="{DynamicResource DeltaSql.Status.Warning.Foreground}" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- ProgressBars -->
+    <Style x:Key="ProgressDialogProgressBarStyle" TargetType="ProgressBar" BasedOn="{StaticResource {x:Type ProgressBar}}">
+        <Setter Property="IsIndeterminate" Value="{Binding ProgressViewModel.ProgressIsIndeterminate}" />
+        <Setter Property="Maximum" Value="{Binding ProgressViewModel.ProgressMax}" />
+        <Setter Property="Minimum" Value="{Binding ProgressViewModel.ProgressMin}" />
+        <Setter Property="Height" Value="20" />
     </Style>
 
     <!-- 
