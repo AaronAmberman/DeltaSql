@@ -31,5 +31,16 @@ namespace DeltaSql
         }
 
         #endregion
+
+        #region String
+
+        public static string EnsurePeriodAtEnd(this string str)
+        {
+            if (!str.EndsWith('.')) str += ".";
+
+            return str;
+        }
+
+        #endregion
     }
 }

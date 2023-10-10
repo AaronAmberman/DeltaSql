@@ -1,9 +1,12 @@
-﻿using SimpleLogger;
+﻿using DeltaSql.Properties;
+using SimpleLogger;
 using System;
+using System.IO;
+using System.Reflection;
 
 namespace DeltaSql.Services
 {
-    internal class LoggingService
+    internal class LoggingService : ILoggingService
     {
         #region Properties
 
@@ -13,7 +16,7 @@ namespace DeltaSql.Services
 
         #region Events
 
-        public event EventHandler<(LogLevel, string)> LogEntry;
+        public event EventHandler<(LogLevel LogLevel, string Message)> LogEntry;
 
         #endregion
 
@@ -54,6 +57,32 @@ namespace DeltaSql.Services
             Logger?.Info(message);
 
             LogEntry?.Invoke(this, (LogLevel.Info, message));
+        }
+
+        public void SetLogPath()
+        {
+            SetLogPath(Settings.Default.LogPath);
+        }
+
+        public void SetLogPath(string path)
+        {
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(path))
+                    ServiceLocator.Instance.LoggingService.Logger.LogFile = Path.Combine(path, "DeltaSql.log");
+                else
+                {
+                    string location = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+                    if (!string.IsNullOrWhiteSpace(location))
+                        ServiceLocator.Instance.LoggingService.Logger.LogFile = Path.Combine(location, "DeltaSql.log");
+                }
+            }
+            catch
+            {
+                // we cannot determine location for some reason, use desktop
+                ServiceLocator.Instance.LoggingService.Logger.LogFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "DeltaSql.log");
+            }
         }
 
         public void Trace(string message)

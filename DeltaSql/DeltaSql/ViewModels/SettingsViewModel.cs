@@ -1,16 +1,11 @@
 ﻿using DeltaSql.Properties;
-using DeltaSql.Theming;
+using DeltaSql.Services;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
-using System.Reflection;
-using System.Threading;
 using System.Windows;
 using System.Windows.Input;
-using WPF.InternalDialogs;
-using WPF.Translations;
 
 namespace DeltaSql.ViewModels
 {
@@ -25,7 +20,7 @@ namespace DeltaSql.ViewModels
         private string logFile;
         private ICommand okCommand;
         private MessageBoxResult result;
-        private Tuple<string, string> selectedLanguage;
+        private KeyValuePair<string, string> selectedLanguage;
         private int theme;
         private Visibility visibility = Visibility.Collapsed;
 
@@ -49,20 +44,7 @@ namespace DeltaSql.ViewModels
 
         public ICommand CancelCommand => cancelCommand ??= new RelayCommand(Cancel);
 
-        public List<Tuple<string, string>> Languages { get; set; } = new List<Tuple<string, string>>
-        {
-            new Tuple<string, string>("en", ServiceLocator.Instance.MainWindowViewModel.Translations.English),
-            new Tuple<string, string>("zh-Hans", ServiceLocator.Instance.MainWindowViewModel.Translations.Chinese), //Chinese (Simplified)
-            new Tuple<string, string>("fr", ServiceLocator.Instance.MainWindowViewModel.Translations.French),
-            new Tuple<string, string>("de", ServiceLocator.Instance.MainWindowViewModel.Translations.German),
-            new Tuple<string, string>("it", ServiceLocator.Instance.MainWindowViewModel.Translations.Italian),
-            new Tuple<string, string>("ja", ServiceLocator.Instance.MainWindowViewModel.Translations.Japanese),
-            new Tuple<string, string>("ko", ServiceLocator.Instance.MainWindowViewModel.Translations.Korean),
-            new Tuple<string, string>("no", ServiceLocator.Instance.MainWindowViewModel.Translations.Norwegian),
-            new Tuple<string, string>("pt", ServiceLocator.Instance.MainWindowViewModel.Translations.Portuguese),
-            new Tuple<string, string>("ru", ServiceLocator.Instance.MainWindowViewModel.Translations.Russian),
-            new Tuple<string, string>("es", ServiceLocator.Instance.MainWindowViewModel.Translations.Spanish)
-        };
+        public IDictionary<string, string> Languages => ServiceLocator.Instance.TranslationService.Languages;
 
         public string LogPath
         {
@@ -86,7 +68,7 @@ namespace DeltaSql.ViewModels
             }
         }
 
-        public Tuple<string, string> SelectedLanguage
+        public KeyValuePair<string, string> SelectedLanguage
         {
             get => selectedLanguage;
             set
@@ -135,7 +117,7 @@ namespace DeltaSql.ViewModels
                 Filter = "Text Files(*.txt)|*.txt|Log Files(*.log)|*.log",
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
                 Multiselect = false,
-                Title = ServiceLocator.Instance.MainWindowViewModel.Translations.BrowseTitle,
+                Title = ServiceLocator.Instance.TranslationService.Translations.BrowseTitle,
                 ValidateNames = true
             };
 
@@ -159,56 +141,17 @@ namespace DeltaSql.ViewModels
 
         private void Ok()
         {
-            if (SelectedLanguage.Item1 != Settings.Default.Language)
-            {
-                Settings.Default.Language = SelectedLanguage.Item1;
+            if (SelectedLanguage.Key != Settings.Default.Language)
+                ServiceLocator.Instance.TranslationService.SetThreadCultureAndTranslations(SelectedLanguage.Key, true);
 
-                Thread.CurrentThread.CurrentCulture = new CultureInfo(SelectedLanguage.Item1);
-                Thread.CurrentThread.CurrentUICulture = new CultureInfo(SelectedLanguage.Item1);
-
-                CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(Settings.Default.Language);
-
-                ServiceLocator.Instance.MainWindowViewModel.Translations = new Translation(new ResourceDictionary
-                {
-                    Source = new Uri($"pack://application:,,,/Translations/Translations.{Settings.Default.Language}.xaml")
-                }, new ResourceDictionaryTranslationDataProvider(), false); ;
-            }
-
-            if (!string.IsNullOrWhiteSpace(LogPath))
-            {
-                ServiceLocator.Instance.LoggingService.Logger.LogFile = Path.Combine(Settings.Default.LogPath, "DeltaSql.log");
-            }
-            else
-            {
-                // null, empty or white-space, ensure our log file like we did in app startup
-                try
-                {
-                    string location = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
-                    if (!string.IsNullOrWhiteSpace(location))
-                    {
-                        // do not set the setting because the user did not choose the path
-                        ServiceLocator.Instance.LoggingService.Logger.LogFile = Path.Combine(location, "DeltaSql.log");
-                    }
-                }
-                catch
-                {
-                    // we cannot determine location for some reason, use desktop
-                    ServiceLocator.Instance.LoggingService.Logger.LogFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "DeltaSql.log");
-                }
-            }
-
-            // allow the setting to take the entered path or null but not bad input
+            ServiceLocator.Instance.LoggingService.SetLogPath(LogPath);
             Settings.Default.LogPath = LogPath;
 
-            if (Theme != Settings.Default.Theme) 
-            {
-                Settings.Default.Theme = Theme;
-
-                ServiceLocator.Instance.ThemingService.Theme = (Theme)Theme;
-            }
+            ServiceLocator.Instance.ThemingService.SetThemeForApp(Theme);
 
             Settings.Default.Save();
+
+            ServiceLocator.Instance.MainWindowViewModel.LoggingInfoColorBlockUpdate();
 
             Result = MessageBoxResult.OK;
             Visibility = Visibility.Collapsed;
@@ -218,41 +161,18 @@ namespace DeltaSql.ViewModels
         {
             switch (language) 
             {
-                case "en":
-                    SelectedLanguage = new Tuple<string, string>(language, ServiceLocator.Instance.MainWindowViewModel.Translations.English);
-                    break;
-                case "zh-Hans":
-                    SelectedLanguage = new Tuple<string, string>(language, ServiceLocator.Instance.MainWindowViewModel.Translations.Chinese);
-                    break;
-                case "fr":
-                    SelectedLanguage = new Tuple<string, string>(language, ServiceLocator.Instance.MainWindowViewModel.Translations.French);
-                    break;
-                case "de":
-                    SelectedLanguage = new Tuple<string, string>(language, ServiceLocator.Instance.MainWindowViewModel.Translations.German);
-                    break;
-                case "it":
-                    SelectedLanguage = new Tuple<string, string>(language, ServiceLocator.Instance.MainWindowViewModel.Translations.Italian);
-                    break;
-                case "ja":
-                    SelectedLanguage = new Tuple<string, string>(language, ServiceLocator.Instance.MainWindowViewModel.Translations.Japanese);
-                    break;
-                case "ko":
-                    SelectedLanguage = new Tuple<string, string>(language, ServiceLocator.Instance.MainWindowViewModel.Translations.Korean);
-                    break;
-                case "no":
-                    SelectedLanguage = new Tuple<string, string>(language, ServiceLocator.Instance.MainWindowViewModel.Translations.Norwegian);
-                    break;
-                case "pt":
-                    SelectedLanguage = new Tuple<string, string>(language, ServiceLocator.Instance.MainWindowViewModel.Translations.Portuguese);
-                    break;
-                case "ru":
-                    SelectedLanguage = new Tuple<string, string>(language, ServiceLocator.Instance.MainWindowViewModel.Translations.Russian);
-                    break;
-                case "es":
-                    SelectedLanguage = new Tuple<string, string>(language, ServiceLocator.Instance.MainWindowViewModel.Translations.Spanish);
-                    break;
-                default:
-                    throw new NotSupportedException();
+                case TranslationService.ENGLISH_CULTURE: SelectedLanguage = new KeyValuePair<string, string>(language, ServiceLocator.Instance.TranslationService.Translations.English); break;
+                case TranslationService.CHINESE_CULTURE: SelectedLanguage = new KeyValuePair<string, string>(language, ServiceLocator.Instance.TranslationService.Translations.Chinese); break;
+                case TranslationService.FRENCH_CULTURE: SelectedLanguage = new KeyValuePair<string, string>(language, ServiceLocator.Instance.TranslationService.Translations.French); break;
+                case TranslationService.GERMAN_CULTURE: SelectedLanguage = new KeyValuePair<string, string>(language, ServiceLocator.Instance.TranslationService.Translations.German); break;
+                case TranslationService.ITALIAN_CULTURE: SelectedLanguage = new KeyValuePair<string, string>(language, ServiceLocator.Instance.TranslationService.Translations.Italian); break;
+                case TranslationService.JAPANESE_CULTURE: SelectedLanguage = new KeyValuePair<string, string>(language, ServiceLocator.Instance.TranslationService.Translations.Japanese); break;
+                case TranslationService.KOREAN_CULTURE: SelectedLanguage = new KeyValuePair<string, string>(language, ServiceLocator.Instance.TranslationService.Translations.Korean); break;
+                case TranslationService.NORWEGIAN_CULTURE: SelectedLanguage = new KeyValuePair<string, string>(language, ServiceLocator.Instance.TranslationService.Translations.Norwegian); break;
+                case TranslationService.PORTUGUESE_CULTURE: SelectedLanguage = new KeyValuePair<string, string>(language, ServiceLocator.Instance.TranslationService.Translations.Portuguese); break;
+                case TranslationService.RUSSIAN_CULTURE: SelectedLanguage = new KeyValuePair<string, string>(language, ServiceLocator.Instance.TranslationService.Translations.Russian); break;
+                case TranslationService.SPANISH_CULTURE: SelectedLanguage = new KeyValuePair<string, string>(language, ServiceLocator.Instance.TranslationService.Translations.Spanish); break;
+                default: SelectedLanguage = new KeyValuePair<string, string>(language, ServiceLocator.Instance.TranslationService.Translations.English); break;
             }
         }
 

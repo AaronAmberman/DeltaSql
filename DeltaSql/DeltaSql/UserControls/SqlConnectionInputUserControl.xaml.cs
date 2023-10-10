@@ -18,10 +18,7 @@ namespace DeltaSql.UserControls
             if (e.Key == Key.Enter || e.Key == Key.Return) 
             {
                 SqlInputViewModel vm = DataContext as SqlInputViewModel;
-
-                if (vm == null) return;
-
-                vm.ConnectIfAble();
+                vm?.ConnectIfAble();
             }
         }
     }

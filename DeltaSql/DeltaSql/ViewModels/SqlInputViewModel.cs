@@ -394,9 +394,7 @@ namespace DeltaSql.ViewModels
                 {
                     SqlConnection = null;
 
-                    string exMes = ex.Message;
-
-                    if (!exMes.EndsWith('.')) exMes += ".";
+                    string exMes = ex.Message.EnsurePeriodAtEnd();
 
                     ServiceLocator.Instance.LoggingService.Error(string.Format(Translations.ConnectionError, cnt, exMes));
 
@@ -467,13 +465,9 @@ namespace DeltaSql.ViewModels
             PreviousConnectionSelectedIndex = -1;
 
             if (ConnectionStatus == ConnectionStatus.DatabaseConnected)
-            {
                 ServiceLocator.Instance.LoggingService.Info(string.Format(Translations.DisconnectingDatabase, sqlConnectionStringBuilder.InitialCatalog));
-            }
             else if (ConnectionStatus == ConnectionStatus.ServerConnected)
-            {
                 ServiceLocator.Instance.LoggingService.Info(string.Format(Translations.DisconnectingServer, sqlConnectionStringBuilder.DataSource));
-            }
 
             Disconnected?.Invoke(this, EventArgs.Empty);
         }
@@ -488,22 +482,16 @@ namespace DeltaSql.ViewModels
                     temp += $"Initial Catalog={Database};";
 
                 if (SelectedAuthMode == 0) // Windows auth
-                {
                     temp += "Integrated Security=True;";
-                }
                 else if (SelectedAuthMode == 1) // SQL auth
-                {
                     temp += $"User Id={Username};Password={Password};";
-                }
 
                 ConnectionString = temp;
             }
 
             // regardless of which top portion was selected, if the user selected a previous connection string then that will take precedence
             if (PreviousConnectionSelectedIndex > -1)
-            {
                 ConnectionString = ServiceLocator.Instance.Cryptographer.Decrypt(Settings.Default.PreviousConnections[PreviousConnectionSelectedIndex]);
-            }
 
             sqlConnectionStringBuilder = new SqlConnectionStringBuilder(ConnectionString);
 

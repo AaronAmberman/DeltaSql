@@ -1,5 +1,4 @@
-﻿using DeltaSql.Cryptography;
-using DeltaSql.Services;
+﻿using DeltaSql.Services;
 using DeltaSql.ViewModels;
 
 namespace DeltaSql
@@ -27,15 +26,17 @@ namespace DeltaSql
             }
         }
 
-        public SimpleCryptographer Cryptographer { get; set; }
+        public ICryptographyService Cryptographer { get; set; }
 
-        public LoggingService LoggingService { get; set; }
+        public ILoggingService LoggingService { get; set; }
 
         public MainWindowViewModel MainWindowViewModel { get; set; }
 
-        public PreviousConnectionsService PreviousConnectionsService { get; set; }
+        public IPreviousConnectionsService PreviousConnectionsService { get; set; }
 
-        public ThemingService ThemingService { get; set; }
+        public IThemingService ThemingService { get; set; }
+
+        public ITranslationService TranslationService { get; set; }
 
         #endregion
 

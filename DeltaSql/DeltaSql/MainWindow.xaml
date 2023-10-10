@@ -109,7 +109,7 @@
                     <ComboBox Grid.Column="1" ItemsSource="{Binding SettingsViewModel.Languages}" SelectedItem="{Binding SettingsViewModel.SelectedLanguage}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Item2}" />
+                                <TextBlock Text="{Binding Value}" />
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>

@@ -1,10 +1,11 @@
 ﻿using DeltaSql.Properties;
+using DeltaSql.ViewModels;
 using System;
 using System.Collections.Generic;
 
 namespace DeltaSql.Services
 {
-    internal class PreviousConnectionsService
+    internal class PreviousConnectionsService : IPreviousConnectionsService
     {
         #region Methods
 
@@ -44,6 +45,17 @@ namespace DeltaSql.Services
             return false;
         }
 
+        public void AddNewConnectionString(string connectionString)
+        {
+            if (ServiceLocator.Instance.PreviousConnectionsService.AddConnectionString(connectionString))
+            {
+                string viewFriendlyPasswordConStr = ServiceLocator.Instance.PreviousConnectionsService.HidePasswordInConnectionString(connectionString);
+
+                ServiceLocator.Instance.MainWindowViewModel.SqlInputViewModelLeft.PreviousConnections.Add(viewFriendlyPasswordConStr);
+                ServiceLocator.Instance.MainWindowViewModel.SqlInputViewModelRight.PreviousConnections.Add(viewFriendlyPasswordConStr);
+            }
+        }
+
         public string HidePasswordInConnectionString(string connectionString) 
         {
             string temp = connectionString;
@@ -63,6 +75,23 @@ namespace DeltaSql.Services
             }
 
             return temp;
+        }
+
+        public void Initialize()
+        {
+            if (Settings.Default.PreviousConnections == null)
+                Settings.Default.PreviousConnections = new System.Collections.Specialized.StringCollection();
+
+            if (Settings.Default.PreviousConnections.Count > 0)
+            {
+                List<string> prevCons = ServiceLocator.Instance.PreviousConnectionsService.ReadInPreviousConnectionStrings();
+
+                if (prevCons.Count > 0)
+                {
+                    ServiceLocator.Instance.MainWindowViewModel.SqlInputViewModelLeft.PreviousConnections.AddRange(prevCons);
+                    ServiceLocator.Instance.MainWindowViewModel.SqlInputViewModelRight.PreviousConnections.AddRange(prevCons);
+                }
+            }
         }
 
         public List<string> ReadInPreviousConnectionStrings()

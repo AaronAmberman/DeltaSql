@@ -3,10 +3,9 @@
     internal enum ConnectionStatus
     {
         NotConnected = 0,
-        Connected = 1,
-        DatabaseConnected = 2,
-        DatabaseConnectionRequired = 3,
-        ServerConnected = 4,
-        ServerConnectionRequired = 5
+        DatabaseConnected = 1,
+        DatabaseConnectionRequired = 2,
+        ServerConnected = 3,
+        ServerConnectionRequired = 4
     }
 }

@@ -1,20 +1,12 @@
-﻿using DeltaSql.Cryptography;
-using DeltaSql.Properties;
+﻿using DeltaSql.Properties;
 using DeltaSql.Services;
-using DeltaSql.Theming;
 using DeltaSql.ViewModels;
 using SimpleLogger;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
-using System.IO;
 using System.Reflection;
-using System.Threading;
 using System.Windows;
-using System.Windows.Documents;
 using System.Windows.Threading;
-using WPF.Translations;
 
 namespace DeltaSql
 {
@@ -24,37 +16,17 @@ namespace DeltaSql
         {
             #region Service Initialization
 
-            ServiceLocator.Instance.Cryptographer = new SimpleCryptographer();
+            ServiceLocator.Instance.Cryptographer = new CryptographyService();
             ServiceLocator.Instance.LoggingService = new LoggingService(new Logger());
-            ServiceLocator.Instance.ThemingService = new ThemingService();
             ServiceLocator.Instance.PreviousConnectionsService = new PreviousConnectionsService();
+            ServiceLocator.Instance.ThemingService = new ThemingService();
+            ServiceLocator.Instance.TranslationService = new TranslationService();
 
             #endregion
 
             #region Log File
 
-            try
-            {
-                if (!string.IsNullOrWhiteSpace(Settings.Default.LogPath))
-                {
-                    // the setting will be the path only (will not include the filename)
-                    ServiceLocator.Instance.LoggingService.Logger.LogFile = Path.Combine(Settings.Default.LogPath, "DeltaSql.log");
-                }
-                else
-                {
-                    string location = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
-                    if (!string.IsNullOrWhiteSpace(location))
-                    {
-                        ServiceLocator.Instance.LoggingService.Logger.LogFile = Path.Combine(location, "DeltaSql.log");
-                    }
-                }
-            }
-            catch
-            {
-                // we cannot determine location for some reason, use desktop
-                ServiceLocator.Instance.LoggingService.Logger.LogFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "DeltaSql.log");
-            }
+            ServiceLocator.Instance.LoggingService.SetLogPath();
 
             #endregion
 
@@ -74,14 +46,23 @@ namespace DeltaSql
             mainWindowViewModel.SqlInputViewModelRight.Connecting += mainWindowViewModel.SqlInputViewModel_Connecting;
             mainWindowViewModel.SqlInputViewModelRight.Disconnected += mainWindowViewModel.SqlInputViewModel_Disconnected;
 
+            ServiceLocator.Instance.LoggingService.LogEntry += mainWindowViewModel.LoggingService_LogEntry;            
             ServiceLocator.Instance.MainWindowViewModel = mainWindowViewModel;
-            ServiceLocator.Instance.LoggingService.LogEntry += mainWindowViewModel.LoggingService_LogEntry;
 
             #endregion
 
             #region Version
 
-            ServiceLocator.Instance.MainWindowViewModel.Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            try
+            {
+                ServiceLocator.Instance.MainWindowViewModel.Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            }
+            catch (Exception ex)
+            {
+                ServiceLocator.Instance.LoggingService.Logger.Error($"An error occurred attempting to get the version: {ex.Message}");
+
+                ServiceLocator.Instance.MainWindowViewModel.Version = "0.0.0.0";
+            }
 
             #endregion
 
@@ -91,21 +72,11 @@ namespace DeltaSql
             if (string.IsNullOrWhiteSpace(Settings.Default.Language))
             {
                 // load english if the language is missing from settings
-                Settings.Default.Language = "en";
+                Settings.Default.Language = TranslationService.ENGLISH_CULTURE;
                 Settings.Default.Save();
             }
 
-            // set our culture to the current one from settings
-            Thread.CurrentThread.CurrentCulture = new CultureInfo(Settings.Default.Language);
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo(Settings.Default.Language);
-
-            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(Settings.Default.Language);
-
-            // set translations
-            ServiceLocator.Instance.MainWindowViewModel.Translations = new Translation(new ResourceDictionary
-            {
-                Source = new Uri($"pack://application:,,,/Translations/Translations.{Settings.Default.Language}.xaml")
-            }, new ResourceDictionaryTranslationDataProvider(), false);
+            ServiceLocator.Instance.TranslationService.SetThreadCultureAndTranslations(Settings.Default.Language, false);
 
             // need translations for view model
             mainWindowViewModel.SettingsViewModel = new SettingsViewModel();
@@ -115,27 +86,13 @@ namespace DeltaSql
 
             #region Theming
 
-            ServiceLocator.Instance.ThemingService.Theme = (Theme)Settings.Default.Theme;
-
-            mainWindowViewModel.SettingsViewModel.Theme = Settings.Default.Theme;
+            ServiceLocator.Instance.ThemingService.InitializeTheme();
 
             #endregion
 
             #region Settings
 
-            if (Settings.Default.PreviousConnections == null)
-                Settings.Default.PreviousConnections = new System.Collections.Specialized.StringCollection();
-
-            if (Settings.Default.PreviousConnections.Count > 0)
-            {
-                List<string> prevCons = ServiceLocator.Instance.PreviousConnectionsService.ReadInPreviousConnectionStrings();
-
-                if (prevCons.Count > 0) 
-                {
-                    mainWindowViewModel.SqlInputViewModelLeft.PreviousConnections.AddRange(prevCons);
-                    mainWindowViewModel.SqlInputViewModelRight.PreviousConnections.AddRange(prevCons);
-                }
-            }
+            ServiceLocator.Instance.PreviousConnectionsService.Initialize();
 
             #endregion
         }
@@ -151,8 +108,8 @@ namespace DeltaSql
             {
                 ServiceLocator.Instance.LoggingService.Logger.Fatal($"An unhandled exception occurred. Details:{Environment.NewLine}{e.Exception}");
 
-                MessageBox.Show(ServiceLocator.Instance.MainWindowViewModel?.Translations.UnhandledErrorMessage ?? "Unhandled exception occurred. We have logged the issue.",
-                    ServiceLocator.Instance.MainWindowViewModel?.Translations.UnhandledErrorTitle ?? "Unhandled Exception", 
+                MessageBox.Show(ServiceLocator.Instance.TranslationService?.Translations.UnhandledErrorMessage ?? "Unhandled exception occurred. We have logged the issue.",
+                    ServiceLocator.Instance.TranslationService?.Translations.UnhandledErrorTitle ?? "Unhandled Exception", 
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
             catch (Exception ex)

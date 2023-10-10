@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace DeltaSql.Cryptography
+namespace DeltaSql.Services
 {
     /*
      * If this were an actual product for sale more work would go into the encryption and decryption here but
@@ -11,7 +11,7 @@ namespace DeltaSql.Cryptography
      * simple encryption and decryption mechanism was used. This can be updated if needed. Good enough for now.
      */
 
-    internal class SimpleCryptographer
+    internal class CryptographyService : ICryptographyService
     {
         public string Decrypt(string encrypted)
         {

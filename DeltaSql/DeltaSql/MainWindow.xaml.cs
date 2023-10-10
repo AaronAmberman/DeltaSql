@@ -16,8 +16,8 @@ namespace DeltaSql
 
             ServiceLocator.Instance.MainWindowViewModel.RichTextBox = output;
 
-            ServiceLocator.Instance.LoggingService.Debug(ServiceLocator.Instance.MainWindowViewModel.Translations.AwaitingConnection1);
-            ServiceLocator.Instance.LoggingService.Debug(ServiceLocator.Instance.MainWindowViewModel.Translations.AwaitingConnection2);
+            ServiceLocator.Instance.LoggingService.Debug(ServiceLocator.Instance.TranslationService.Translations.AwaitingConnection1);
+            ServiceLocator.Instance.LoggingService.Debug(ServiceLocator.Instance.TranslationService.Translations.AwaitingConnection2);
         }
     }
 }

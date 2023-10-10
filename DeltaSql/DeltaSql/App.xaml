@@ -10,10 +10,6 @@
     <Application.Resources>
         <ResourceDictionary>
             <converters:ArithmeticConverter x:Key="ArithmeticConverter" />
-            <converters:EqualsConverter x:Key="EqualsConverter" />
-            <converters:EqualsMultiConverter x:Key="EqualsMultiConverter" />
-            <converters:NotEqualsConverter x:Key="NotEqualsConverter" />
-            <converters:NotEqualsMultiConverter x:Key="NotEqualsMultiConverter" />
             <converters:ThicknessConverter x:Key="ThicknessConverter" />
 
             <ResourceDictionary.MergedDictionaries>
