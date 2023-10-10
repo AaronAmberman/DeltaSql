@@ -1,4 +1,5 @@
 ﻿using DeltaSql.Enums;
+using DeltaSql.Properties;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -29,6 +30,7 @@ namespace DeltaSql.ViewModels
         private bool manualMode;
         private string password = string.Empty;
         private ObservableCollection<string> previousConnections = new ObservableCollection<string>();
+        private int previousConnectionSelectedIndex = -1;
         private int selectedAuthMode;
         private string server = string.Empty;
         private SqlConnectionStringBuilder sqlConnectionStringBuilder;
@@ -167,6 +169,16 @@ namespace DeltaSql.ViewModels
             }
         }
 
+        public int PreviousConnectionSelectedIndex 
+        { 
+            get => previousConnectionSelectedIndex; 
+            set
+            {
+                previousConnectionSelectedIndex = value;
+                OnPropertyChanged();
+            }
+        }
+
         public int SelectedAuthMode
         {
             get => selectedAuthMode;
@@ -263,6 +275,9 @@ namespace DeltaSql.ViewModels
 
         private bool CanConnect()
         {
+            // previous connections take precedence
+            if (PreviousConnectionSelectedIndex > -1) return true;
+
             if (ManualMode)
             {
                 return !string.IsNullOrWhiteSpace(ConnectionString) && 
@@ -299,6 +314,7 @@ namespace DeltaSql.ViewModels
             ManualEntryAcceptanceState = AcceptanceState.None;
             ManualEntryWarningError = string.Empty;
             Password = string.Empty;
+            PreviousConnectionSelectedIndex = -1;
             Server = string.Empty;
             Username = string.Empty;
         }
@@ -476,6 +492,12 @@ namespace DeltaSql.ViewModels
                 }
 
                 ConnectionString = temp;
+            }
+
+            // regardless of which top portion was selected, if the user selected a previous connection string then that will take precedence
+            if (PreviousConnectionSelectedIndex > -1)
+            {
+                ConnectionString = ServiceLocator.Instance.Cryptographer.Decrypt(Settings.Default.PreviousConnections[PreviousConnectionSelectedIndex]);
             }
 
             sqlConnectionStringBuilder = new SqlConnectionStringBuilder(ConnectionString);

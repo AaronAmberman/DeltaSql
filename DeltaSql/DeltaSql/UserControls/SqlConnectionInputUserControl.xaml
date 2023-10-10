@@ -270,7 +270,7 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Padding="0,1,0,0" Style="{StaticResource TextBlockForegroundStyle}" 
                            Text="{Binding Translations.PreviousConnections, FallbackValue=Previous connections}" />
-                <ComboBox Grid.Column="1" Margin="5,0,0,0"
+                <ComboBox Grid.Column="1" Margin="5,0,0,0" SelectedIndex="{Binding PreviousConnectionSelectedIndex}"
                           ItemsSource="{Binding PreviousConnections}" />
                 <Grid.Style>
                     <Style TargetType="Grid">

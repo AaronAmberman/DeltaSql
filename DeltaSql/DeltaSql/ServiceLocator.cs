@@ -33,6 +33,8 @@ namespace DeltaSql
 
         public MainWindowViewModel MainWindowViewModel { get; set; }
 
+        public PreviousConnectionsService PreviousConnectionsService { get; set; }
+
         public ThemingService ThemingService { get; set; }
 
         #endregion

@@ -81,6 +81,8 @@ namespace DeltaSql.ViewModels
 
         public void SqlInputViewModel_Connected(object sender, EventArgs e)
         {
+            string conStr = string.Empty;
+
             if (sender == SqlInputViewModelLeft)
             {
                 // right side is already connected, don't do anything
@@ -91,6 +93,8 @@ namespace DeltaSql.ViewModels
                     else if (SqlInputViewModelLeft.ConnectionStatus == ConnectionStatus.ServerConnected)
                         SqlInputViewModelRight.ConnectionStatus = ConnectionStatus.ServerConnectionRequired;
                 }
+
+                conStr = SqlInputViewModelLeft.ConnectionString;
             }
             else if (sender == SqlInputViewModelRight)
             {
@@ -102,8 +106,26 @@ namespace DeltaSql.ViewModels
                     else if (SqlInputViewModelRight.ConnectionStatus == ConnectionStatus.ServerConnected)
                         SqlInputViewModelLeft.ConnectionStatus = ConnectionStatus.ServerConnectionRequired;
                 }
+
+                conStr = SqlInputViewModelRight.ConnectionString;
             }
 
+            // handle previous connection setting
+            if (!string.IsNullOrWhiteSpace(conStr))
+            {
+                if (ServiceLocator.Instance.PreviousConnectionsService.AddConnectionString(conStr))
+                {
+                    string viewFriendlyPasswordConStr = ServiceLocator.Instance.PreviousConnectionsService.HidePasswordInConnectionString(conStr);
+
+                    Invoke(() => 
+                    {
+                        SqlInputViewModelLeft.PreviousConnections.Add(viewFriendlyPasswordConStr);
+                        SqlInputViewModelRight.PreviousConnections.Add(viewFriendlyPasswordConStr);
+                    });
+                }
+            }
+
+            // close if we have both connections
             if (SqlInputViewModelLeft.SqlConnection != null && SqlInputViewModelRight.SqlConnection != null)
             {
                 SqlInputViewModelLeft.Visibility = Visibility.Collapsed;

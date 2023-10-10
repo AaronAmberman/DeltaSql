@@ -5,12 +5,14 @@ using DeltaSql.Theming;
 using DeltaSql.ViewModels;
 using SimpleLogger;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Threading;
 using WPF.Translations;
 
@@ -25,6 +27,7 @@ namespace DeltaSql
             ServiceLocator.Instance.Cryptographer = new SimpleCryptographer();
             ServiceLocator.Instance.LoggingService = new LoggingService(new Logger());
             ServiceLocator.Instance.ThemingService = new ThemingService();
+            ServiceLocator.Instance.PreviousConnectionsService = new PreviousConnectionsService();
 
             #endregion
 
@@ -115,6 +118,24 @@ namespace DeltaSql
             ServiceLocator.Instance.ThemingService.Theme = (Theme)Settings.Default.Theme;
 
             mainWindowViewModel.SettingsViewModel.Theme = Settings.Default.Theme;
+
+            #endregion
+
+            #region Previous Connections
+
+            if (Settings.Default.PreviousConnections == null)
+                Settings.Default.PreviousConnections = new System.Collections.Specialized.StringCollection();
+
+            if (Settings.Default.PreviousConnections.Count > 0)
+            {
+                List<string> prevCons = ServiceLocator.Instance.PreviousConnectionsService.ReadInPreviousConnectionStrings();
+
+                if (prevCons.Count > 0) 
+                {
+                    mainWindowViewModel.SqlInputViewModelLeft.PreviousConnections.AddRange(prevCons);
+                    mainWindowViewModel.SqlInputViewModelRight.PreviousConnections.AddRange(prevCons);
+                }
+            }
 
             #endregion
         }
