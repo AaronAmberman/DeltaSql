@@ -7,6 +7,6 @@ This project uses my [LTT-WPF-Application](https://github.com/AaronAmberman/LTT-
 ## Progress
 Very early alpha.
 
-![image](https://github.com/AaronAmberman/DeltaSql/assets/23512394/156b63b8-ce3a-4295-98c5-23e62b4d3e48)
+![image](https://github.com/AaronAmberman/DeltaSql/assets/23512394/eb5babca-2307-4dba-9ec7-6a4733dbf731)
 
-![image](https://github.com/AaronAmberman/DeltaSql/assets/23512394/484e8260-71de-466e-bd77-da3d31243818)
+![image](https://github.com/AaronAmberman/DeltaSql/assets/23512394/3f39be41-3826-4124-bcb5-51e42a82a8fe)
