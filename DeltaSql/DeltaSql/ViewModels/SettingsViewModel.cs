@@ -151,8 +151,6 @@ namespace DeltaSql.ViewModels
 
             Settings.Default.Save();
 
-            ServiceLocator.Instance.MainWindowViewModel.LoggingInfoColorBlockUpdate();
-
             Result = MessageBoxResult.OK;
             Visibility = Visibility.Collapsed;
         }

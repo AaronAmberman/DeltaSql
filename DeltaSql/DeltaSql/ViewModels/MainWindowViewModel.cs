@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -21,6 +23,7 @@ namespace DeltaSql.ViewModels
     {
         #region Fields
 
+        private CancellationTokenSource cancellationTokenSource;
         private ICommand showSettingsCommand;
         private Translation translations;
         private string version;
@@ -213,26 +216,19 @@ namespace DeltaSql.ViewModels
                     case LogLevel.Debug: p.Inlines.Add(new Italic(new Run(e.Message) { Foreground = Brushes.CornflowerBlue })); break;
                     case LogLevel.Error: p.Inlines.Add(new Bold(new Run(e.Message) { Foreground = Brushes.Red })); break;
                     case LogLevel.Fatal: p.Inlines.Add(new Bold(new Italic(new Run(e.Message) { Foreground = Brushes.DarkRed }))); break;
-                    case LogLevel.Info: p.Inlines.Add(new Run(e.Message) { Tag = "Info", Foreground = Settings.Default.Theme == 0 ? Brushes.Black : Brushes.White }); break;
                     case LogLevel.Trace: p.Inlines.Add(new Italic(new Run(e.Message) { Foreground = Brushes.SandyBrown })); break;
                     case LogLevel.Warning: p.Inlines.Add(new Bold(new Run(e.Message) { Foreground = Brushes.Orange })); break;
+                    case LogLevel.Info:
+                        p.Inlines.Add(new Run(e.Message)
+                        {
+                            Tag = "Info",
+                            Style = Application.Current.Resources["LoggingInfoRunStyle"] as Style
+                        }); 
+                        break;
                 }
 
                 RichTextBox.Document.Blocks.Add(p);
             });
-        }
-
-        public void LoggingInfoColorBlockUpdate()
-        {
-            // update based on theme
-            foreach (Paragraph paragraph in RichTextBox.Document.Blocks)
-            {
-                foreach (Run run in paragraph.Inlines.OfType<Run>())
-                {
-                    if (run.Tag.Equals("Info"))
-                        run.Foreground = Settings.Default.Theme == 0 ? Brushes.Black : Brushes.White;
-                }
-            }
         }
 
         private void SetMessageBoxState(string message, string title, bool isModal, MessageBoxButton button, MessageBoxInternalDialogImage image, Visibility visibility)

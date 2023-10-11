@@ -229,6 +229,11 @@
         <Setter Property="Height" Value="20" />
     </Style>
 
+    <!-- Runs -->
+    <Style x:Key="LoggingInfoRunStyle" TargetType="Run">
+        <Setter Property="Foreground" Value="{DynamicResource DeltaSql.Foreground}" />
+    </Style>
+
     <!-- 
         Template Overrides
     -->
