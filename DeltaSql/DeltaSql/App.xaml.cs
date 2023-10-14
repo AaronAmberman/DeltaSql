@@ -34,6 +34,8 @@ namespace DeltaSql
 
             MainWindowViewModel mainWindowViewModel = new MainWindowViewModel
             {
+                ConnectionViewModelLeft = new ConnectionViewModel(),
+                ConnectionViewModelRight = new ConnectionViewModel(),
                 MessageBoxViewModel = new MessageBoxViewModel(),
                 ProgressViewModel = new ProgressViewModel(),
                 SqlInputViewModelLeft = new SqlInputViewModel(),

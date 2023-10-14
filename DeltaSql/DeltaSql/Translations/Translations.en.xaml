@@ -78,6 +78,7 @@
     <sys:String x:Key="ServerWatermark">server name[\instance name[,port]]</sys:String>
     <sys:String x:Key="Settings">Settings</sys:String>
     <sys:String x:Key="Spanish">español</sys:String>
+    <sys:String x:Key="SqlServerVersion">SQL version : {0}</sys:String>
     <sys:String x:Key="Theme">Theme</sys:String>
     <sys:String x:Key="TheLowercase">the</sys:String>
     <sys:String x:Key="UnhandledErrorMessage">An unhandled exception occurred in the application. We have logged it. Please see log for further details.</sys:String>

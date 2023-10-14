@@ -34,6 +34,7 @@ namespace DeltaSql.ViewModels
         private int selectedAuthMode;
         private string server = string.Empty;
         private SqlConnectionStringBuilder sqlConnectionStringBuilder;
+        private string sqlVersion;
         private Translation translations;
         private string username = string.Empty;
         private Visibility visibility = Visibility.Visible;
@@ -201,6 +202,16 @@ namespace DeltaSql.ViewModels
 
         public SqlConnection SqlConnection { get; private set; }
 
+        public string SqlVersion
+        {
+            get => sqlVersion;
+            set
+            {
+                sqlVersion = value;
+                OnPropertyChanged();
+            }
+        }
+
         public dynamic Translations 
         {
             get => translations; 
@@ -276,7 +287,8 @@ namespace DeltaSql.ViewModels
         private bool CanConnect()
         {
             // previous connections take precedence
-            if (PreviousConnectionSelectedIndex > -1) return true;
+            if (PreviousConnectionSelectedIndex > -1 &&
+                (ConnectionStatus == ConnectionStatus.NotConnected || ConnectionStatus == ConnectionStatus.DatabaseConnectionRequired || ConnectionStatus == ConnectionStatus.ServerConnectionRequired)) return true;
 
             if (ManualMode)
             {
@@ -386,8 +398,21 @@ namespace DeltaSql.ViewModels
                 {
                     SqlConnection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
 
-                    // test connection
                     SqlConnection.Open();
+
+                    // get the version of SQL we are connected to
+                    SqlCommand command = new SqlCommand("SELECT SERVERPROPERTY('productversion')", SqlConnection);
+
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                        SqlVersion = reader.GetString(0);
+
+                    reader.Close();
+                    reader.Dispose();
+
+                    command.Dispose();
+
                     SqlConnection.Close();
                 }
                 catch (Exception ex)

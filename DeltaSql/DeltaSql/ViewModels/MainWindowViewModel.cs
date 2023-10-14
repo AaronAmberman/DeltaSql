@@ -30,6 +30,10 @@ namespace DeltaSql.ViewModels
 
         #region Properties
 
+        public ConnectionViewModel ConnectionViewModelLeft { get; set; }
+
+        public ConnectionViewModel ConnectionViewModelRight { get; set; }
+
         public Dispatcher Dispatcher { get; set; }
 
         public RichTextBox RichTextBox { get; set; }
@@ -53,6 +57,8 @@ namespace DeltaSql.ViewModels
             {
                 translations = value;
 
+                ConnectionViewModelLeft.Translations = value;
+                ConnectionViewModelRight.Translations = value;
                 SqlInputViewModelLeft.Translations = value;
                 SqlInputViewModelRight.Translations = value;
 
@@ -122,6 +128,23 @@ namespace DeltaSql.ViewModels
             {
                 SqlInputViewModelLeft.Visibility = Visibility.Collapsed;
                 SqlInputViewModelRight.Visibility = Visibility.Collapsed;
+
+                ConnectionViewModelLeft.ConnectionStatus = SqlInputViewModelLeft.ConnectionStatus;
+                ConnectionViewModelLeft.SqlConnection = SqlInputViewModelLeft.SqlConnection;
+                ConnectionViewModelLeft.ServerVersion = string.Format(Translations.SqlServerVersion, SqlInputViewModelLeft.SqlVersion);
+
+                ConnectionViewModelRight.ConnectionStatus = SqlInputViewModelRight.ConnectionStatus;
+                ConnectionViewModelRight.SqlConnection = SqlInputViewModelRight.SqlConnection;
+                ConnectionViewModelRight.ServerVersion = string.Format(Translations.SqlServerVersion, SqlInputViewModelRight.SqlVersion);
+
+                SqlConnectionStringBuilder left = new SqlConnectionStringBuilder(SqlInputViewModelLeft.ConnectionString);
+                SqlConnectionStringBuilder right = new SqlConnectionStringBuilder(SqlInputViewModelRight.ConnectionString);
+
+                string leftName = string.IsNullOrWhiteSpace(left.InitialCatalog) ? left.DataSource : left.InitialCatalog;
+                string rightName = string.IsNullOrWhiteSpace(right.InitialCatalog) ? right.DataSource : right.InitialCatalog;
+
+                ConnectionViewModelLeft.ConnectionName = leftName;
+                ConnectionViewModelRight.ConnectionName = rightName;
             }
         }
 

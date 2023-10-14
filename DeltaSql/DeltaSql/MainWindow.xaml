@@ -36,14 +36,8 @@
                         <ColumnDefinition Width="*" MinWidth="200" />
                     </Grid.ColumnDefinitions>
                     <Grid x:Name="inputOneGrid" Grid.Column="0" Margin="0,0,5,0">
-                        <TabControl Margin="0,2,0,0">
-                            <TabItem Header="Temp">
-
-                            </TabItem>
-                        </TabControl>
-                        <Button Background="Transparent" BorderThickness="0" HorizontalAlignment="Right" VerticalAlignment="Top" 
-                                Content="{StaticResource Disconnect}" />
-                        <internalDialogs:InternalDialog Grid.Row="0" Grid.RowSpan="2" CloseOnEscape="False" Background="#AA000000" IsModal="False"
+                        <uc:ConnectionUserControl DataContext="{Binding ConnectionViewModelLeft}" />
+                        <internalDialogs:InternalDialog CloseOnEscape="False" Background="#AA000000" IsModal="False"
                                                         FocusParent="{Binding ElementName=inputOneGrid}"
                                                         Visibility="{Binding SqlInputViewModelLeft.Visibility}">
                             <Grid>
@@ -54,14 +48,8 @@
                     <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" Width="3" ResizeBehavior="PreviousAndNext" ResizeDirection="Columns"
                                   Background="{DynamicResource DeltaSql.GridSplitter}" />
                     <Grid x:Name="inputTwoGrid" Grid.Column="2" Margin="5,0,0,0">
-                        <TabControl Margin="0,2,0,0">
-                            <TabItem Header="Temp">
-
-                            </TabItem>
-                        </TabControl>
-                        <Button Background="Transparent" BorderThickness="0" HorizontalAlignment="Right" VerticalAlignment="Top" 
-                                Content="{StaticResource Disconnect}" />
-                        <internalDialogs:InternalDialog Grid.Row="0" Grid.RowSpan="2" CloseOnEscape="False" Background="#AA000000" IsModal="False"
+                        <uc:ConnectionUserControl DataContext="{Binding ConnectionViewModelRight}" />
+                        <internalDialogs:InternalDialog CloseOnEscape="False" Background="#AA000000" IsModal="False"
                                                         FocusParent="{Binding ElementName=inputTwoGrid}"
                                                         Visibility="{Binding SqlInputViewModelRight.Visibility}">
                             <Grid>
