@@ -1,5 +1,7 @@
 ﻿using DeltaSql.Enums;
+using System;
 using System.Data.SqlClient;
+using System.Windows.Input;
 using WPF.Translations;
 
 namespace DeltaSql.ViewModels
@@ -10,9 +12,16 @@ namespace DeltaSql.ViewModels
 
         private string connectionName;
         private ConnectionStatus connectionStatus = ConnectionStatus.NotConnected;
+        private ICommand disconnectCommand;
         private SqlConnection sqlConnection;
         private string serverVersion;
         private Translation translations;
+
+        #endregion
+
+        #region Events
+
+        public event EventHandler Disconnected;
 
         #endregion
 
@@ -37,6 +46,8 @@ namespace DeltaSql.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        public ICommand DisconnectCommand => disconnectCommand ?? (disconnectCommand = new RelayCommand(Disconnect));
 
         public SqlConnection SqlConnection 
         { 
@@ -72,7 +83,10 @@ namespace DeltaSql.ViewModels
 
         #region Methods
 
-
+        private void Disconnect()
+        {
+            Disconnected?.Invoke(this, EventArgs.Empty);
+        }
 
         #endregion
     }

@@ -200,7 +200,7 @@ namespace DeltaSql.ViewModels
             }
         }
 
-        public SqlConnection SqlConnection { get; private set; }
+        public SqlConnection SqlConnection { get; set; }
 
         public string SqlVersion
         {
@@ -480,7 +480,7 @@ namespace DeltaSql.ViewModels
             Process.Start(new ProcessStartInfo("https://www.connectionstrings.com/sql-server/") { UseShellExecute = true });
         }
 
-        private void Disconnect()
+        public void Disconnect()
         {
             // we don't hold connections to the database open, so just clean up the object
             SqlConnection.Dispose();

@@ -205,6 +205,43 @@ namespace DeltaSql.ViewModels
             else if (sender == SqlInputViewModelRight) SqlInputViewModelLeft.ConnectionStatus = ConnectionStatus.NotConnected;
         }
 
+        public void ConnectionViewModel_Disconnected(object sender, EventArgs e)
+        {
+            if (sender == ConnectionViewModelLeft)
+            {
+                // disconnecting will clear the status on both sides because of a workflow need in SqlInputViewModel, 
+                // so cache the value and re-set it after disconnect
+                ConnectionStatus cached = SqlInputViewModelRight.ConnectionStatus;
+
+                SqlInputViewModelLeft.Disconnect(); // this will dispose the SqlConnection
+
+                ConnectionViewModelLeft.ConnectionName = string.Empty;
+                ConnectionViewModelLeft.ConnectionStatus = ConnectionStatus.NotConnected;
+                ConnectionViewModelLeft.ServerVersion = string.Empty;
+                ConnectionViewModelLeft.SqlConnection = null;
+
+                SqlInputViewModelRight.ConnectionStatus = cached;
+            }
+            else if (sender == ConnectionViewModelRight)
+            {
+                // disconnecting will clear the status on both sides because of a workflow need in SqlInputViewModel, 
+                // so cache the value and re-set it after disconnect
+                ConnectionStatus cached = SqlInputViewModelLeft.ConnectionStatus;
+
+                SqlInputViewModelRight.Disconnect(); // this will dispose the SqlConnection
+
+                ConnectionViewModelRight.ConnectionName = string.Empty;
+                ConnectionViewModelRight.ConnectionStatus = ConnectionStatus.NotConnected;
+                ConnectionViewModelRight.ServerVersion = string.Empty;
+                ConnectionViewModelRight.SqlConnection = null;
+
+                SqlInputViewModelLeft.ConnectionStatus = cached;
+            }
+
+            SqlInputViewModelLeft.Visibility = Visibility.Visible;
+            SqlInputViewModelRight.Visibility = Visibility.Visible;
+        }
+
         public void Invoke(Action action)
         {
             Dispatcher.Invoke(action);
