@@ -1,5 +1,5 @@
 ﻿using DeltaSql.Properties;
-using SimpleLogger;
+using SimpleRollingLogger;
 using System;
 using System.IO;
 using System.Reflection;

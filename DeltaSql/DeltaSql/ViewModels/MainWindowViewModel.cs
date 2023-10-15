@@ -1,5 +1,5 @@
 ﻿using DeltaSql.Enums;
-using SimpleLogger;
+using SimpleRollingLogger;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

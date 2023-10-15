@@ -1,4 +1,4 @@
-﻿using SimpleLogger;
+﻿using SimpleRollingLogger;
 using System;
 
 namespace DeltaSql.Services

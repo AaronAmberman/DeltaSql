@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:customControls="clr-namespace:WPF.CustomControls;assembly=WPF.CustomControls">
+                    xmlns:customControls="clr-namespace:WPF.AA.CustomControls;assembly=WPF.AA.CustomControls">
     <Style x:Key="WatermarkTextBoxStyle" TargetType="{x:Type customControls:WatermarkTextBox}" 
            BasedOn="{StaticResource {x:Type customControls:WatermarkTextBox}}">
         <Setter Property="Background" Value="{DynamicResource TextBoxBase.Background}"/>

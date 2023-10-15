@@ -1,7 +1,7 @@
 ﻿using DeltaSql.Properties;
 using DeltaSql.Services;
 using DeltaSql.ViewModels;
-using SimpleLogger;
+using SimpleRollingLogger;
 using System;
 using System.Diagnostics;
 using System.Reflection;
