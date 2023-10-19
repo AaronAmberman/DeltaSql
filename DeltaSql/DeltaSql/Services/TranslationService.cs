@@ -74,6 +74,9 @@ namespace DeltaSql.Services
 
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(Settings.Default.Language);
 
+            if (Translations != null)
+                ((Translation)Translations).Dispose();
+
             Translations = new Translation(new ResourceDictionary
             {
                 Source = new Uri($"pack://application:,,,/Translations/Translations.{Settings.Default.Language}.xaml")
