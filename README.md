@@ -6,3 +6,5 @@ This project uses my [LTT-WPF-Application](https://github.com/AaronAmberman/LTT-
 
 ## Progress
 This project has been abandoned be of this Azure Data Studio free extension. https://learn.microsoft.com/en-us/azure-data-studio/extensions/schema-compare-extension. At the time of writing this the Schema Compare extension was free.
+
+Keeping for example purposes.
